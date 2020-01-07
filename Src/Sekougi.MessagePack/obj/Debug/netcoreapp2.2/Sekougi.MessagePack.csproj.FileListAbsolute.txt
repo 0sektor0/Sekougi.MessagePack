@@ -1,9 +1,0 @@
-C:\projects\Sekougi.MessagePack\Src\Sekougi.MessagePack\obj\Debug\netcoreapp2.2\Sekougi.MessagePack.csprojAssemblyReference.cache
-C:\projects\Sekougi.MessagePack\Src\Sekougi.MessagePack\obj\Debug\netcoreapp2.2\Sekougi.MessagePack.csproj.CoreCompileInputs.cache
-C:\projects\Sekougi.MessagePack\Src\Sekougi.MessagePack\obj\Debug\netcoreapp2.2\Sekougi.MessagePack.AssemblyInfoInputs.cache
-C:\projects\Sekougi.MessagePack\Src\Sekougi.MessagePack\obj\Debug\netcoreapp2.2\Sekougi.MessagePack.AssemblyInfo.cs
-C:\projects\Sekougi.MessagePack\Src\Sekougi.MessagePack\bin\Debug\netcoreapp2.2\Sekougi.MessagePack.deps.json
-C:\projects\Sekougi.MessagePack\Src\Sekougi.MessagePack\bin\Debug\netcoreapp2.2\Sekougi.MessagePack.dll
-C:\projects\Sekougi.MessagePack\Src\Sekougi.MessagePack\bin\Debug\netcoreapp2.2\Sekougi.MessagePack.pdb
-C:\projects\Sekougi.MessagePack\Src\Sekougi.MessagePack\obj\Debug\netcoreapp2.2\Sekougi.MessagePack.dll
-C:\projects\Sekougi.MessagePack\Src\Sekougi.MessagePack\obj\Debug\netcoreapp2.2\Sekougi.MessagePack.pdb
