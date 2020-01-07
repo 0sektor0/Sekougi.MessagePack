@@ -1,0 +1,47 @@
+﻿{
+  "version": "1.0.0",
+  "restore": {
+    "projectUniqueName": "C:\\projects\\Sekougi.MessagePack\\Src\\Sekougi.MessagePack.ConsoleTest\\Sekougi.MessagePack.ConsoleTest.csproj",
+    "projectName": "Sekougi.MessagePack.ConsoleTest",
+    "projectPath": "C:\\projects\\Sekougi.MessagePack\\Src\\Sekougi.MessagePack.ConsoleTest\\Sekougi.MessagePack.ConsoleTest.csproj",
+    "outputPath": "C:\\projects\\Sekougi.MessagePack\\Src\\Sekougi.MessagePack.ConsoleTest\\obj\\",
+    "projectStyle": "PackageReference",
+    "fallbackFolders": [
+      "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
+    ],
+    "originalTargetFrameworks": [
+      "netcoreapp2.2"
+    ],
+    "frameworks": {
+      "netcoreapp2.2": {
+        "projectReferences": {
+          "C:\\projects\\Sekougi.MessagePack\\Src\\Sekougi.MessagePack\\Sekougi.MessagePack.csproj": {
+            "projectPath": "C:\\projects\\Sekougi.MessagePack\\Src\\Sekougi.MessagePack\\Sekougi.MessagePack.csproj"
+          }
+        }
+      }
+    },
+    "warningProperties": {
+      "warnAsError": [
+        "NU1605"
+      ]
+    }
+  },
+  "frameworks": {
+    "netcoreapp2.2": {
+      "dependencies": {
+        "Microsoft.NETCore.App": {
+          "suppressParent": "All",
+          "target": "Package",
+          "version": "[2.2.0, )",
+          "autoReferenced": true
+        }
+      },
+      "imports": [
+        "net461"
+      ],
+      "assetTargetFallback": true,
+      "warn": true
+    }
+  }
+}
