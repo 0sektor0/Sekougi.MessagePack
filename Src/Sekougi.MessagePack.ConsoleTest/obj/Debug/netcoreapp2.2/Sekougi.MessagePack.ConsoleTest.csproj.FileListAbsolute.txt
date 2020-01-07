@@ -1,0 +1,14 @@
+C:\projects\Sekougi.MessagePack\Src\Sekougi.MessagePack.ConsoleTest\bin\Debug\netcoreapp2.2\Sekougi.MessagePack.ConsoleTest.deps.json
+C:\projects\Sekougi.MessagePack\Src\Sekougi.MessagePack.ConsoleTest\bin\Debug\netcoreapp2.2\Sekougi.MessagePack.ConsoleTest.runtimeconfig.json
+C:\projects\Sekougi.MessagePack\Src\Sekougi.MessagePack.ConsoleTest\bin\Debug\netcoreapp2.2\Sekougi.MessagePack.ConsoleTest.runtimeconfig.dev.json
+C:\projects\Sekougi.MessagePack\Src\Sekougi.MessagePack.ConsoleTest\bin\Debug\netcoreapp2.2\Sekougi.MessagePack.ConsoleTest.dll
+C:\projects\Sekougi.MessagePack\Src\Sekougi.MessagePack.ConsoleTest\bin\Debug\netcoreapp2.2\Sekougi.MessagePack.ConsoleTest.pdb
+C:\projects\Sekougi.MessagePack\Src\Sekougi.MessagePack.ConsoleTest\bin\Debug\netcoreapp2.2\Sekougi.MessagePack.dll
+C:\projects\Sekougi.MessagePack\Src\Sekougi.MessagePack.ConsoleTest\bin\Debug\netcoreapp2.2\Sekougi.MessagePack.pdb
+C:\projects\Sekougi.MessagePack\Src\Sekougi.MessagePack.ConsoleTest\obj\Debug\netcoreapp2.2\Sekougi.MessagePack.ConsoleTest.csprojAssemblyReference.cache
+C:\projects\Sekougi.MessagePack\Src\Sekougi.MessagePack.ConsoleTest\obj\Debug\netcoreapp2.2\Sekougi.MessagePack.ConsoleTest.csproj.CoreCompileInputs.cache
+C:\projects\Sekougi.MessagePack\Src\Sekougi.MessagePack.ConsoleTest\obj\Debug\netcoreapp2.2\Sekougi.MessagePack.ConsoleTest.AssemblyInfoInputs.cache
+C:\projects\Sekougi.MessagePack\Src\Sekougi.MessagePack.ConsoleTest\obj\Debug\netcoreapp2.2\Sekougi.MessagePack.ConsoleTest.AssemblyInfo.cs
+C:\projects\Sekougi.MessagePack\Src\Sekougi.MessagePack.ConsoleTest\obj\Debug\netcoreapp2.2\Sekougi.MessagePack.ConsoleTest.csproj.CopyComplete
+C:\projects\Sekougi.MessagePack\Src\Sekougi.MessagePack.ConsoleTest\obj\Debug\netcoreapp2.2\Sekougi.MessagePack.ConsoleTest.dll
+C:\projects\Sekougi.MessagePack\Src\Sekougi.MessagePack.ConsoleTest\obj\Debug\netcoreapp2.2\Sekougi.MessagePack.ConsoleTest.pdb
