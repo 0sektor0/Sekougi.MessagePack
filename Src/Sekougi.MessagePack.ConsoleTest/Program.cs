@@ -10,9 +10,7 @@ namespace Sekougi.MessagePack.ConsoleTest
             using (var buffer = new MessagePackBuffer())
             {
                 var writer = new MessagePackWriter(buffer);
-                writer.WriteNull();
-                writer.Write((byte)1);
-                writer.Write(1707);
+                writer.WriteString(new byte[] {});
 
                 var messagePack = buffer.GetAll();
                 foreach (var byteValue in messagePack)
