@@ -29,24 +29,20 @@ namespace Sekougi.MessagePack
                 WriteBinaryData8(MessagePackTypeCode.STR8, stringBytes);
             else if (stringBytes.Length < MessagePackRange.MAX_LEN_16)
                 WriteBinaryData16(MessagePackTypeCode.STR16, stringBytes);
-            else if (stringBytes.Length < MessagePackRange.MAX_LEN_32)
+            else 
                 WriteBinaryData32(MessagePackTypeCode.STR32, stringBytes);
-            else
-                throw new MessagePackException("raw string to big");
         }
         
         public void WriteBinary(byte[] bytes)
         {
             if (bytes == null)
                 WriteNull();
-            if (bytes.Length < MessagePackRange.MAX_LEN_8)
+            else if (bytes.Length < MessagePackRange.MAX_LEN_8)
                 WriteBinaryData8(MessagePackTypeCode.BIN8, bytes);
-            if (bytes.Length < MessagePackRange.MAX_LEN_16)
+            else if (bytes.Length < MessagePackRange.MAX_LEN_16)
                 WriteBinaryData16(MessagePackTypeCode.BIN16, bytes);
-            if (bytes.Length < MessagePackRange.MAX_LEN_32)
-                WriteBinaryData32(MessagePackTypeCode.BIN32, bytes);
             else
-                throw new MessagePackException("raw binary to big");
+                WriteBinaryData32(MessagePackTypeCode.BIN32, bytes);
         }
 
         public void WriteArrayHeader(int length)
@@ -232,7 +228,7 @@ namespace Sekougi.MessagePack
                 _buffer.WriteByte(code16);
                 WriteBigEndian((ushort) length);
             }
-            else if (length < MessagePackRange.MAX_LEN_32)
+            else
             {
                 _buffer.WriteByte(code32);
                 WriteBigEndian(length);
