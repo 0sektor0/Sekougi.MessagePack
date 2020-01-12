@@ -114,10 +114,20 @@ namespace Sekougi.MessagePack
         public void Write(sbyte value)
         {
             var byteValue = unchecked((byte) value);
+            if (value >= 0 && value <= byte.MaxValue)
+            {
+                Write(byteValue);
+                return;
+            }
+
+            if (value < 0 && value >= MessagePackRange.NEGATIVE_FIX_NUM_MIN)
+            {
+                var valueWithPrefix = (byte) (byteValue + MessagePackTypeCode.NEGATIVE_FIX_NUM);
+                _buffer.WriteByte(valueWithPrefix);
+                return;
+            }
             
-            if (value < MessagePackRange.NEGATIVE_FIX_NUM_MIN || value > 0)
-                _buffer.WriteByte(MessagePackTypeCode.INT8);
-            
+            _buffer.WriteByte(MessagePackTypeCode.INT8);
             _buffer.WriteByte(byteValue);
         }
         
