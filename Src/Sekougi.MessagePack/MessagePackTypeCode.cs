@@ -2,8 +2,6 @@ namespace Sekougi.MessagePack
 {
     public static class MessagePackTypeCode
     {
-        public const byte NEGATIVE_FIX_NUM = 0xe0;
-        
         public const byte NIL     = 0xc0;
         public const byte FALSE   = 0xc2;
         public const byte TRUE    = 0xc3;

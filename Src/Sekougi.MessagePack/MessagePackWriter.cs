@@ -114,16 +114,16 @@ namespace Sekougi.MessagePack
         public void Write(sbyte value)
         {
             var byteValue = unchecked((byte) value);
-            if (value >= 0 && value <= byte.MaxValue)
+            if (value >= 0)
             {
                 Write(byteValue);
                 return;
             }
 
-            if (value < 0 && value >= MessagePackRange.NEGATIVE_FIX_NUM_MIN)
+            var isNegativeFixNum = value < 0 && value >= MessagePackRange.NEGATIVE_FIX_NUM_MIN;
+            if (isNegativeFixNum)
             {
-                var valueWithPrefix = (byte) (byteValue + MessagePackTypeCode.NEGATIVE_FIX_NUM);
-                _buffer.WriteByte(valueWithPrefix);
+                _buffer.WriteByte(byteValue);
                 return;
             }
             
@@ -133,7 +133,7 @@ namespace Sekougi.MessagePack
         
         public void Write(short value)
         {
-            var canUseSbyte = value <= byte.MaxValue && value >= byte.MinValue;
+            var canUseSbyte = value <= sbyte.MaxValue && value >= sbyte.MinValue;
             if (canUseSbyte)
             {
                 Write((sbyte)value);
@@ -284,10 +284,10 @@ namespace Sekougi.MessagePack
             unchecked
             {
                 var bigEndian1 = (byte) value;
-                _buffer.WriteByte(bigEndian1);
-                
                 var bigEndian2 = (byte) (value >> 8);
+                
                 _buffer.WriteByte(bigEndian2);
+                _buffer.WriteByte(bigEndian1);
             }
         }
 
@@ -299,16 +299,14 @@ namespace Sekougi.MessagePack
             unchecked
             {
                 var bigEndian1 = (byte) value;
-                _buffer.WriteByte(bigEndian1);
-                
                 var bigEndian2 = (byte) (value >> 8);
-                _buffer.WriteByte(bigEndian2);
-                
                 var bigEndian3 = (byte) (value >> 16);
-                _buffer.WriteByte(bigEndian3);
-                
                 var bigEndian4 = (byte) (value >> 24);
+                
                 _buffer.WriteByte(bigEndian4);
+                _buffer.WriteByte(bigEndian3);
+                _buffer.WriteByte(bigEndian2);
+                _buffer.WriteByte(bigEndian1);
             }
         }
         
@@ -320,28 +318,22 @@ namespace Sekougi.MessagePack
             unchecked
             {
                 var bigEndian1 = (byte) value;
-                _buffer.WriteByte(bigEndian1);
-                
                 var bigEndian2 = (byte) (value >> 8);
-                _buffer.WriteByte(bigEndian2);
-                
                 var bigEndian3 = (byte) (value >> 16);
-                _buffer.WriteByte(bigEndian3);
-                
                 var bigEndian4 = (byte) (value >> 24);
-                _buffer.WriteByte(bigEndian4);
-                
                 var bigEndian5 = (byte) (value >> 32);
-                _buffer.WriteByte(bigEndian5);
-                
                 var bigEndian6 = (byte) (value >> 40);
-                _buffer.WriteByte(bigEndian6);
-                
                 var bigEndian7 = (byte) (value >> 48);
-                _buffer.WriteByte(bigEndian7);
-                
                 var bigEndian8 = (byte) (value >> 56);
+                
                 _buffer.WriteByte(bigEndian8);
+                _buffer.WriteByte(bigEndian1);
+                _buffer.WriteByte(bigEndian7);
+                _buffer.WriteByte(bigEndian6);
+                _buffer.WriteByte(bigEndian5);
+                _buffer.WriteByte(bigEndian4);
+                _buffer.WriteByte(bigEndian3);
+                _buffer.WriteByte(bigEndian2);
             }
         }
         
