@@ -2,179 +2,172 @@ using System;
 using System.Text;
 
 
+
 namespace Sekougi.MessagePack
 {
-    public readonly struct MessagePackWriter
+    public static class MessagePackWriter
     {
-        private readonly IMessagePackBuffer _buffer;
-        
-        
-        public MessagePackWriter(IMessagePackBuffer buffer)
+        public static void WriteNull(IMessagePackBuffer buffer)
         {
-            _buffer = buffer;
+            buffer.WriteByte(MessagePackTypeCode.NIL);
         }
 
-        public void WriteNull()
-        {
-            _buffer.WriteByte(MessagePackTypeCode.NIL);
-        }
-
-        public void Write(string str, Encoding encoding)
+        public static void Write(string str, Encoding encoding, IMessagePackBuffer buffer)
         {
             var bytes = str != null ? encoding.GetBytes(str) : null;
-            WriteString(bytes);
+            WriteString(bytes, buffer);
         }
         
-        public void WriteBinary(byte[] bytes)
+        public static void WriteBinary(byte[] bytes, IMessagePackBuffer buffer)
         {
             if (bytes == null)
-                WriteNull();
+                WriteNull(buffer);
             else if (bytes.Length < MessagePackRange.MAX_LEN_8)
-                WriteBinaryData8(MessagePackTypeCode.BIN8, bytes);
+                WriteBinaryData8(MessagePackTypeCode.BIN8, bytes, buffer);
             else if (bytes.Length < MessagePackRange.MAX_LEN_16)
-                WriteBinaryData16(MessagePackTypeCode.BIN16, bytes);
+                WriteBinaryData16(MessagePackTypeCode.BIN16, bytes, buffer);
             else
-                WriteBinaryData32(MessagePackTypeCode.BIN32, bytes);
+                WriteBinaryData32(MessagePackTypeCode.BIN32, bytes, buffer);
         }
 
-        public void WriteArrayHeader(int length)
+        public static void WriteArrayHeader(int length, IMessagePackBuffer buffer)
         {
             WriteCollectionHeader(length, MessagePackTypeCode.FIX_ARRAY, 
-                MessagePackTypeCode.ARRAY16, MessagePackTypeCode.ARRAY32);
+                MessagePackTypeCode.ARRAY16, MessagePackTypeCode.ARRAY32, buffer);
         }
 
-        public void WriteMapHeader(int length)
+        public static void WriteMapHeader(int length, IMessagePackBuffer buffer)
         {
             WriteCollectionHeader(length, MessagePackTypeCode.FIX_MAP, 
-                MessagePackTypeCode.MAP16, MessagePackTypeCode.MAP32);
+                MessagePackTypeCode.MAP16, MessagePackTypeCode.MAP32, buffer);
         }
         
-        public void Write(bool value)
+        public static void Write(bool value, IMessagePackBuffer buffer)
         {
-            _buffer.WriteByte(value ? MessagePackTypeCode.TRUE : MessagePackTypeCode.FALSE);
+            buffer.WriteByte(value ? MessagePackTypeCode.TRUE : MessagePackTypeCode.FALSE);
         }
 
-        public void Write(byte value)
+        public static void Write(byte value, IMessagePackBuffer buffer)
         {
             if (value > MessagePackRange.POSITIVE_FIX_NUM_MAX)
             {
-                _buffer.WriteByte(MessagePackTypeCode.UINT8);
+                buffer.WriteByte(MessagePackTypeCode.UINT8);
             }
             
-            _buffer.WriteByte(value);
+            buffer.WriteByte(value);
         }
 
-        public void Write(ushort value)
+        public static void Write(ushort value, IMessagePackBuffer buffer)
         {
             var canUseByte = value <= byte.MaxValue;
             if (canUseByte)
             {
-                Write((byte)value);
+                Write((byte)value, buffer);
                 return;
             }
             
-            _buffer.WriteByte(MessagePackTypeCode.UINT16);
-            WriteBigEndian(value);
+            buffer.WriteByte(MessagePackTypeCode.UINT16);
+            WriteBigEndian(value, buffer);
         }
 
-        public void Write(uint value)
+        public static void Write(uint value, IMessagePackBuffer buffer)
         {
             var canUseUshort = value <= ushort.MaxValue;
             if (canUseUshort)
             {
-                Write((ushort)value);
+                Write((ushort)value, buffer);
                 return;
             }
-            
-            _buffer.WriteByte(MessagePackTypeCode.UINT32);
-            WriteBigEndian(value);
+
+            buffer.WriteByte(MessagePackTypeCode.UINT32);
+            WriteBigEndian(value, buffer);
         }
 
-        public void Write(ulong value)
+        public static void Write(ulong value, IMessagePackBuffer buffer)
         {
             var canUseUint = value <= uint.MaxValue;
             if (canUseUint)
             {
-                Write((uint)value);
+                Write((uint)value, buffer);
                 return;
             }
             
-            _buffer.WriteByte(MessagePackTypeCode.UINT64);
-            WriteBigEndian(value);
+            buffer.WriteByte(MessagePackTypeCode.UINT64);
+            WriteBigEndian(value, buffer);
         }
 
-        public void Write(sbyte value)
+        public static void Write(sbyte value, IMessagePackBuffer buffer)
         {
             var byteValue = unchecked((byte) value);
             if (value >= 0)
             {
-                Write(byteValue);
+                Write(byteValue, buffer);
                 return;
             }
 
             var isNegativeFixNum = value < 0 && value >= MessagePackRange.NEGATIVE_FIX_NUM_MIN;
             if (isNegativeFixNum)
             {
-                _buffer.WriteByte(byteValue);
+                buffer.WriteByte(byteValue);
                 return;
             }
             
-            _buffer.WriteByte(MessagePackTypeCode.INT8);
-            _buffer.WriteByte(byteValue);
+            buffer.WriteByte(MessagePackTypeCode.INT8);
+            buffer.WriteByte(byteValue);
         }
         
-        public void Write(short value)
+        public static void Write(short value, IMessagePackBuffer buffer)
         {
             var canUseSbyte = value <= sbyte.MaxValue && value >= sbyte.MinValue;
             if (canUseSbyte)
             {
-                Write((sbyte)value);
+                Write((sbyte)value, buffer);
                 return;
             }
             
-            _buffer.WriteByte(MessagePackTypeCode.INT16);
-            WriteBigEndian(value);
+            buffer.WriteByte(MessagePackTypeCode.INT16);
+            WriteBigEndian(value, buffer);
         }
         
-        public void Write(int value)
+        public static void Write(int value, IMessagePackBuffer buffer)
         {
             var canUseShort = value <= short.MaxValue && value >= short.MinValue;
             if (canUseShort)
             {
-                Write((short)value);
+                Write((short)value, buffer);
                 return;
             }
             
-            _buffer.WriteByte(MessagePackTypeCode.INT32);
-            WriteBigEndian(value);
+            buffer.WriteByte(MessagePackTypeCode.INT32);
+            WriteBigEndian(value, buffer);
         }
         
-        public void Write(long value)
+        public static void Write(long value, IMessagePackBuffer buffer)
         {
             var canUseInt = value <= int.MaxValue && value >= int.MinValue;
             if (canUseInt)
             {
-                Write((int)value);
+                Write((int)value, buffer);
                 return;
             }
             
-            _buffer.WriteByte(MessagePackTypeCode.INT64);
-            WriteBigEndian(value);
+            buffer.WriteByte(MessagePackTypeCode.INT64);
+            WriteBigEndian(value, buffer);
         }
         
-        public void Write(float value)
+        public static void Write(float value, IMessagePackBuffer buffer)
         {
-            _buffer.WriteByte(MessagePackTypeCode.FLOAT32);
-            WriteBigEndian(value);
+            buffer.WriteByte(MessagePackTypeCode.FLOAT32);
+            WriteBigEndian(value, buffer);
         }
         
-        public void Write(double value)
+        public static void Write(double value, IMessagePackBuffer buffer)
         {
-            _buffer.WriteByte(MessagePackTypeCode.FLOAT64);
-            WriteBigEndian(value);
+            buffer.WriteByte(MessagePackTypeCode.FLOAT64);
+            WriteBigEndian(value, buffer);
         }
 
-        public void Write(DateTime dateTime)
+        public static void Write(DateTime dateTime, IMessagePackBuffer buffer)
         {
             if (dateTime.Kind == DateTimeKind.Local)
             {
@@ -192,28 +185,28 @@ namespace Sekougi.MessagePack
                 if (isZeroNanoSeconds)
                 {
                     var data32 = (uint)data64;
-                    _buffer.WriteByte(MessagePackTypeCode.TIMESTAMP32);
-                    WriteBigEndian(MessagePackExtensionTypeCode.TIMESTAMP);
-                    WriteBigEndian(data32);
+                    buffer.WriteByte(MessagePackTypeCode.TIMESTAMP32);
+                    buffer.WriteByte(unchecked((byte) MessagePackExtensionTypeCode.TIMESTAMP));
+                    WriteBigEndian(data32, buffer);
                 }
                 else
                 {
-                    _buffer.WriteByte(MessagePackTypeCode.TIMESTAMP64);
-                    WriteBigEndian(MessagePackExtensionTypeCode.TIMESTAMP);
-                    WriteBigEndian(data64);
+                    buffer.WriteByte(MessagePackTypeCode.TIMESTAMP64);
+                    buffer.WriteByte(unchecked((byte) MessagePackExtensionTypeCode.TIMESTAMP));
+                    WriteBigEndian(data64, buffer);
                 }
             }
             else
             {
-                _buffer.WriteByte(MessagePackTypeCode.TIMESTAMP96);
-                WriteBigEndian(MessagePackExtensionTypeCode.TIMESTAMP96);
-                WriteBigEndian(MessagePackExtensionTypeCode.TIMESTAMP);
-                WriteBigEndian((uint)nanoseconds);
-                WriteBigEndian(seconds);
+                buffer.WriteByte(MessagePackTypeCode.TIMESTAMP96);
+                buffer.WriteByte(unchecked((byte) MessagePackExtensionTypeCode.TIMESTAMP96));
+                buffer.WriteByte(unchecked((byte) MessagePackExtensionTypeCode.TIMESTAMP));
+                WriteBigEndian((uint)nanoseconds, buffer);
+                WriteBigEndian(seconds, buffer);
             }
         }
 
-        private void WriteCollectionHeader(int length, byte prefix, byte code16, byte code32)
+        private static void WriteCollectionHeader(int length, byte prefix, byte code16, byte code32, IMessagePackBuffer buffer)
         {
             if (length < 0)
             {
@@ -223,86 +216,89 @@ namespace Sekougi.MessagePack
             if (length < MessagePackRange.FIX_ARRAY_MAX_LEN)
             {
                 var code = prefix + length;
-                _buffer.WriteByte((byte) code);
+                buffer.WriteByte((byte) code);
             }
             else if (length < MessagePackRange.MAX_LEN_16)
             {
-                _buffer.WriteByte(code16);
-                WriteBigEndian((ushort) length);
+                buffer.WriteByte(code16);
+                WriteBigEndian((ushort) length, buffer);
             }
             else
             {
-                _buffer.WriteByte(code32);
-                WriteBigEndian(length);
+                buffer.WriteByte(code32);
+                WriteBigEndian(length, buffer);
             }
         }
 
-        private void WriteString(byte[] stringBytes)
+        private static void WriteString(byte[] stringBytes, IMessagePackBuffer buffer)
         {
             if (stringBytes == null)
-                WriteNull();
+                WriteNull(buffer);
             else if (stringBytes.Length < MessagePackRange.FIX_STR_MAX_LEN)
-                WriteFixString(stringBytes);
+                WriteFixString(stringBytes, buffer);
             else if (stringBytes.Length < MessagePackRange.MAX_LEN_8)
-                WriteBinaryData8(MessagePackTypeCode.STR8, stringBytes);
+                WriteBinaryData8(MessagePackTypeCode.STR8, stringBytes, buffer);
             else if (stringBytes.Length < MessagePackRange.MAX_LEN_16)
-                WriteBinaryData16(MessagePackTypeCode.STR16, stringBytes);
+                WriteBinaryData16(MessagePackTypeCode.STR16, stringBytes, buffer);
             else if (stringBytes.Length < MessagePackRange.MAX_LEN_32)
-                WriteBinaryData32(MessagePackTypeCode.STR32, stringBytes);
+                WriteBinaryData32(MessagePackTypeCode.STR32, stringBytes, buffer);
             else
                 throw new MessagePackStringTooLongException("max len must be less then (2^32)-1 bytes");
         }
         
-        private void WriteFixString(byte[] stringBytes)
+        private static void WriteFixString(byte[] stringBytes, IMessagePackBuffer buffer)
         {
             var prefix = MessagePackTypeCode.FIX_STR + stringBytes.Length;
-            _buffer.WriteByte((byte) prefix);
-            _buffer.Write(stringBytes);
+            buffer.WriteByte((byte) prefix);
+            buffer.Write(stringBytes);
         }
         
-        private void WriteBinaryData8(byte typeCode, byte[] bytes)
+        private static void WriteBinaryData8(byte typeCode, byte[] bytes, IMessagePackBuffer buffer)
         {
-            _buffer.WriteByte(typeCode);
+            buffer.WriteByte(typeCode);
             
             var byteSize = (byte) bytes.Length;
-            _buffer.WriteByte(byteSize);
-            _buffer.Write(bytes);
+            buffer.WriteByte(byteSize);
+            buffer.Write(bytes);
         }
         
-        private void WriteBinaryData16(byte typeCode, byte[] bytes)
+        private static void WriteBinaryData16(byte typeCode, byte[] bytes, IMessagePackBuffer buffer)
         {
-            _buffer.WriteByte(typeCode);
+            buffer.WriteByte(typeCode);
             
             var byteSize = (ushort) bytes.Length;
-            WriteBigEndian(byteSize);
-            _buffer.Write(bytes);
+            WriteBigEndian(byteSize, buffer);
+            buffer.Write(bytes);
         }
         
-        private void WriteBinaryData32(byte typeCode, byte[] bytes)
+        private static void WriteBinaryData32(byte typeCode, byte[] bytes, IMessagePackBuffer buffer)
         {
-            _buffer.WriteByte(typeCode);
+            buffer.WriteByte(typeCode);
             
             var byteSize = (uint) bytes.Length;
-            WriteBigEndian(byteSize);
-            _buffer.Write(bytes);
+            WriteBigEndian(byteSize, buffer);
+            buffer.Write(bytes);
         }
         
-        private void WriteBigEndian(ushort value)
+        private static void WriteBigEndian(ushort value, IMessagePackBuffer buffer)
         {
             unchecked
             {
                 var bigEndian1 = (byte) value;
                 var bigEndian2 = (byte) (value >> 8);
                 
-                _buffer.WriteByte(bigEndian2);
-                _buffer.WriteByte(bigEndian1);
+                buffer.WriteByte(bigEndian2);
+                buffer.WriteByte(bigEndian1);
             }
         }
 
-        private void WriteBigEndian(short value) => 
-            WriteBigEndian(unchecked((ushort) value));
-
-        private void WriteBigEndian(uint value)
+        private static void WriteBigEndian(short value, IMessagePackBuffer buffer) => 
+            WriteBigEndian(unchecked((ushort) value), buffer);
+        
+        private static void WriteBigEndian(int value, IMessagePackBuffer buffer) => 
+            WriteBigEndian(unchecked((uint) value), buffer);
+        
+        private static void WriteBigEndian(uint value, IMessagePackBuffer buffer)
         {
             unchecked
             {
@@ -311,17 +307,14 @@ namespace Sekougi.MessagePack
                 var bigEndian3 = (byte) (value >> 16);
                 var bigEndian4 = (byte) (value >> 24);
                 
-                _buffer.WriteByte(bigEndian4);
-                _buffer.WriteByte(bigEndian3);
-                _buffer.WriteByte(bigEndian2);
-                _buffer.WriteByte(bigEndian1);
+                buffer.WriteByte(bigEndian4);
+                buffer.WriteByte(bigEndian3);
+                buffer.WriteByte(bigEndian2);
+                buffer.WriteByte(bigEndian1);
             }
         }
-        
-        private void WriteBigEndian(int value) => 
-            WriteBigEndian(unchecked((uint) value));
 
-        private void WriteBigEndian(ulong value)
+        private static void WriteBigEndian(ulong value, IMessagePackBuffer buffer)
         {
             unchecked
             {
@@ -334,24 +327,24 @@ namespace Sekougi.MessagePack
                 var bigEndian7 = (byte) (value >> 48);
                 var bigEndian8 = (byte) (value >> 56);
                 
-                _buffer.WriteByte(bigEndian8);
-                _buffer.WriteByte(bigEndian7);
-                _buffer.WriteByte(bigEndian6);
-                _buffer.WriteByte(bigEndian5);
-                _buffer.WriteByte(bigEndian4);
-                _buffer.WriteByte(bigEndian3);
-                _buffer.WriteByte(bigEndian2);
-                _buffer.WriteByte(bigEndian1);
+                buffer.WriteByte(bigEndian8);
+                buffer.WriteByte(bigEndian7);
+                buffer.WriteByte(bigEndian6);
+                buffer.WriteByte(bigEndian5);
+                buffer.WriteByte(bigEndian4);
+                buffer.WriteByte(bigEndian3);
+                buffer.WriteByte(bigEndian2);
+                buffer.WriteByte(bigEndian1);
             }
         }
         
-        private void WriteBigEndian(long value) => 
-            WriteBigEndian(unchecked((ulong) value));
+        private static void WriteBigEndian(long value, IMessagePackBuffer buffer) => 
+            WriteBigEndian(unchecked((ulong) value), buffer);
 
-        private unsafe void WriteBigEndian(float value) =>
-            WriteBigEndian(*(int*) &value);
+        private static unsafe void WriteBigEndian(float value, IMessagePackBuffer buffer) =>
+            WriteBigEndian(*(int*) &value, buffer);
 
-        private unsafe void WriteBigEndian(double value) =>
-            WriteBigEndian(*(long*) &value);
+        private static unsafe void WriteBigEndian(double value, IMessagePackBuffer buffer) =>
+            WriteBigEndian(*(long*) &value, buffer);
     }
 }
