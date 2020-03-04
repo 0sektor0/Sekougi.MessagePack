@@ -1,3 +1,5 @@
+using System;
+using System.Text;
 using Xunit;
 
 
@@ -17,8 +19,8 @@ namespace Sekougi.MessagePack.Tests
 
             var data = buffer.GetAll();
             Assert.Equal(2, data.Length);
-            Assert.Equal(0xc2, data[0]);
-            Assert.Equal(0xc3, data[1]);
+            Assert.Equal(MessagePackTypeCode.FALSE, data[0]);
+            Assert.Equal(MessagePackTypeCode.TRUE, data[1]);
         }
 
         // values from -33 to 127 coverage
@@ -297,6 +299,113 @@ namespace Sekougi.MessagePack.Tests
             Assert.Equal(data[6], 255);
             Assert.Equal(data[7], 255);
             Assert.Equal(data[8], 255);
+        }
+        
+        [Fact]
+        public void FloatBoundaryTest()
+        {
+            var capacity = 10;
+            using var buffer = new MessagePackBuffer(capacity);
+            var writer = new MessagePackWriter(buffer);
+            
+            writer.Write(float.MaxValue);
+            writer.Write(float.MinValue);
+            
+            var data = buffer.GetAll();
+            Assert.Equal(data.Length, capacity);
+            
+            var firstValue = data.Slice(0, 5);
+            Assert.Equal(firstValue[0], MessagePackTypeCode.FLOAT32);
+            Assert.Equal(firstValue[1], 127);
+            Assert.Equal(firstValue[2], 127);
+            Assert.Equal(firstValue[3], 255);
+            Assert.Equal(firstValue[4], 255);
+            
+            var secondValue = data.Slice(5, 5);
+            Assert.Equal(secondValue[0], MessagePackTypeCode.FLOAT32);
+            Assert.Equal(secondValue[1], 255);
+            Assert.Equal(secondValue[2], 127);
+            Assert.Equal(secondValue[3], 255);
+            Assert.Equal(secondValue[4], 255);
+        }
+                
+        [Fact]
+        public void DoubleBoundaryTest()
+        {
+            var capacity = 18;
+            using var buffer = new MessagePackBuffer(capacity);
+            var writer = new MessagePackWriter(buffer);
+            
+            writer.Write(double.MinValue);
+            writer.Write(double.MaxValue);
+            
+            var data = buffer.GetAll();
+            Assert.Equal(data.Length, capacity);
+            
+            var firstValue = data.Slice(0, 9);
+            Assert.Equal(firstValue[0], MessagePackTypeCode.FLOAT64);
+            Assert.Equal(firstValue[1], 255);
+            Assert.Equal(firstValue[2], 239);
+            Assert.Equal(firstValue[3], 255);
+            Assert.Equal(firstValue[4], 255);
+            Assert.Equal(firstValue[5], 255);
+            Assert.Equal(firstValue[6], 255);
+            Assert.Equal(firstValue[7], 255);
+            Assert.Equal(firstValue[8], 255);
+            
+            var secondValue = data.Slice(9, 9);
+            Assert.Equal(secondValue[0], MessagePackTypeCode.FLOAT64);
+            Assert.Equal(secondValue[1], 127);
+            Assert.Equal(secondValue[2], 239);
+            Assert.Equal(secondValue[3], 255);
+            Assert.Equal(secondValue[4], 255);
+            Assert.Equal(secondValue[5], 255);
+            Assert.Equal(secondValue[6], 255);
+            Assert.Equal(secondValue[7], 255);
+            Assert.Equal(secondValue[8], 255);
+        }
+
+        [Fact]
+        public void NullTest()
+        {
+            var capacity = 1;
+            using var buffer = new MessagePackBuffer(capacity);
+            var writer = new MessagePackWriter(buffer);
+            
+            writer.WriteNull();
+            
+            var data = buffer.GetAll();
+            Assert.Equal(data.Length, capacity);
+            Assert.Equal(data[0], MessagePackTypeCode.NIL);
+        }
+
+        [Fact]
+        public void NullStringTest()
+        {
+            var capacity = 1;
+            using var buffer = new MessagePackBuffer(capacity);
+            var writer = new MessagePackWriter(buffer);
+            
+            writer.Write(null, Encoding.UTF8);
+            
+            var data = buffer.GetAll();
+            Assert.Equal(data.Length, capacity);
+            Assert.Equal(data[0], MessagePackTypeCode.NIL);
+        }
+
+        [Fact] 
+        public void SmallStringTest()
+        {
+            var capacity = 2;
+            using var buffer = new MessagePackBuffer(capacity);
+            var writer = new MessagePackWriter(buffer);
+            
+            writer.Write("a", Encoding.UTF8);
+            
+            var data = buffer.GetAll();
+            Assert.Equal(data.Length, capacity);
+            Assert.Equal(data[0], 161);
+            Assert.Equal(data[1], 97);
         }
     }
 }

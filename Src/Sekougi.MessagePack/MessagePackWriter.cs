@@ -1,5 +1,5 @@
 using System;
-
+using System.Text;
 
 
 namespace Sekougi.MessagePack
@@ -19,18 +19,10 @@ namespace Sekougi.MessagePack
             _buffer.WriteByte(MessagePackTypeCode.NIL);
         }
 
-        public void WriteString(byte[] stringBytes)
+        public void Write(string str, Encoding encoding)
         {
-            if (stringBytes == null)
-                WriteNull();
-            else if (stringBytes.Length < MessagePackRange.FIX_STR_MAX_LEN)
-                WriteFixString(stringBytes);
-            else if (stringBytes.Length < MessagePackRange.MAX_LEN_8)
-                WriteBinaryData8(MessagePackTypeCode.STR8, stringBytes);
-            else if (stringBytes.Length < MessagePackRange.MAX_LEN_16)
-                WriteBinaryData16(MessagePackTypeCode.STR16, stringBytes);
-            else 
-                WriteBinaryData32(MessagePackTypeCode.STR32, stringBytes);
+            var bytes = str != null ? encoding.GetBytes(str) : null;
+            WriteString(bytes);
         }
         
         public void WriteBinary(byte[] bytes)
@@ -244,6 +236,22 @@ namespace Sekougi.MessagePack
                 WriteBigEndian(length);
             }
         }
+
+        private void WriteString(byte[] stringBytes)
+        {
+            if (stringBytes == null)
+                WriteNull();
+            else if (stringBytes.Length < MessagePackRange.FIX_STR_MAX_LEN)
+                WriteFixString(stringBytes);
+            else if (stringBytes.Length < MessagePackRange.MAX_LEN_8)
+                WriteBinaryData8(MessagePackTypeCode.STR8, stringBytes);
+            else if (stringBytes.Length < MessagePackRange.MAX_LEN_16)
+                WriteBinaryData16(MessagePackTypeCode.STR16, stringBytes);
+            else if (stringBytes.Length < MessagePackRange.MAX_LEN_32)
+                WriteBinaryData32(MessagePackTypeCode.STR32, stringBytes);
+            else
+                throw new MessagePackStringTooLongException("max len must be less then (2^32)-1 bytes");
+        }
         
         private void WriteFixString(byte[] stringBytes)
         {
@@ -327,13 +335,13 @@ namespace Sekougi.MessagePack
                 var bigEndian8 = (byte) (value >> 56);
                 
                 _buffer.WriteByte(bigEndian8);
-                _buffer.WriteByte(bigEndian1);
                 _buffer.WriteByte(bigEndian7);
                 _buffer.WriteByte(bigEndian6);
                 _buffer.WriteByte(bigEndian5);
                 _buffer.WriteByte(bigEndian4);
                 _buffer.WriteByte(bigEndian3);
                 _buffer.WriteByte(bigEndian2);
+                _buffer.WriteByte(bigEndian1);
             }
         }
         
