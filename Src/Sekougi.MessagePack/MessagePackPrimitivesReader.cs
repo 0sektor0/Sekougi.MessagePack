@@ -1,7 +1,6 @@
 using System;
-using System.Collections.Generic;
 using System.IO;
-
+using System.Collections.Generic;
 
 
 namespace Sekougi.MessagePack
@@ -10,7 +9,12 @@ namespace Sekougi.MessagePack
     {
         public static sbyte ReadSbyte(Stream stream)
         {
-            throw new NotImplementedException();
+            var longValue = ReadLong(stream);
+            if (longValue > sbyte.MaxValue || longValue < sbyte.MinValue)
+                throw new OverflowException();
+            
+            var value = (sbyte) longValue;
+            return value;
         }
 
         public static byte ReadByte(Stream stream)
@@ -20,7 +24,12 @@ namespace Sekougi.MessagePack
 
         public static short ReadShort(Stream stream)
         {
-            throw new NotImplementedException();
+            var longValue = ReadLong(stream);
+            if (longValue > short.MaxValue || longValue < short.MinValue)
+                throw new OverflowException();
+            
+            var value = (short) longValue;
+            return value;
         }
         
         public static ushort ReadUhort(Stream stream)
@@ -30,7 +39,12 @@ namespace Sekougi.MessagePack
 
         public static int ReadInt(Stream stream)
         {
-            throw new NotImplementedException();
+            var longValue = ReadLong(stream);
+            if (longValue > int.MaxValue || longValue < int.MinValue)
+                throw new OverflowException();
+            
+            var value = (int) longValue;
+            return value;
         }
 
         public static uint Readuint(Stream stream)
@@ -40,10 +54,28 @@ namespace Sekougi.MessagePack
 
         public static long ReadLong(Stream stream)
         {
-            throw new NotImplementedException();
+            var typeCode = (byte) stream.ReadByte();
+
+            var isFixNum = typeCode >> 5 == 7 || typeCode >> 7 == 0;
+            if (isFixNum)
+                return (sbyte) typeCode;
+
+            if (typeCode == MessagePackTypeCode.INT8) 
+                return (sbyte) stream.ReadByte();
+
+            if (typeCode == MessagePackTypeCode.INT16)
+                return ReadBigEndianShort(stream);
+
+            if (typeCode == MessagePackTypeCode.INT32)
+                return ReadBigEndianInt(stream);
+
+            if (typeCode == MessagePackTypeCode.INT64)
+                return ReadBigEndianLong(stream);
+            
+            throw new OverflowException();
         }
 
-        public static ulong RealUlong(Stream stream)
+        public static ulong ReadUlong(Stream stream)
         {
             throw new NotImplementedException();
         }
@@ -97,6 +129,41 @@ namespace Sekougi.MessagePack
         public static Dictionary<TKey, TValue> ReadDictionary<TKey, TValue>(Stream stream)
         {
             throw new NotImplementedException();
+        }
+
+        private static short ReadBigEndianShort(Stream stream)
+        {
+            var bigEndian0 = (short) (stream.ReadByte() << 8);
+            var bigEndian1 = (short) stream.ReadByte();
+
+            var value = (short) checked(bigEndian0 + bigEndian1);
+            return value;
+        }
+
+        private static int ReadBigEndianInt(Stream stream)
+        {
+            var bigEndian0 = stream.ReadByte() << 24;
+            var bigEndian1 = stream.ReadByte() << 16;
+            var bigEndian2 = stream.ReadByte() << 8;
+            var bigEndian3 = stream.ReadByte();
+
+            var value = checked(bigEndian0 + bigEndian1 + bigEndian2 + bigEndian3);
+            return value;
+        }
+
+        private static long ReadBigEndianLong(Stream stream)
+        {
+            var bigEndian0 = (long) stream.ReadByte() << 56;
+            var bigEndian1 = (long) stream.ReadByte() << 48;
+            var bigEndian2 = (long) stream.ReadByte() << 40;
+            var bigEndian3 = (long) stream.ReadByte() << 32;
+            var bigEndian4 = (long) stream.ReadByte() << 24;
+            var bigEndian5 = (long) stream.ReadByte() << 16;
+            var bigEndian6 = (long) stream.ReadByte() << 8;
+            var bigEndian7 = (long) stream.ReadByte();
+
+            var value = checked(bigEndian0 + bigEndian1 + bigEndian2 + bigEndian3 + bigEndian4 + bigEndian5 + bigEndian6 + bigEndian7);
+            return value;
         }
     }
 }

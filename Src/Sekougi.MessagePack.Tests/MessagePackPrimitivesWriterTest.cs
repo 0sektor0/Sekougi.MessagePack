@@ -6,7 +6,7 @@ using Xunit;
 
 namespace Sekougi.MessagePack.Tests
 {
-    public class MessagePackWriterTest
+    public class MessagePackPrimitivesWriterTest
     {
         [Fact]
         public void BoolTest()
