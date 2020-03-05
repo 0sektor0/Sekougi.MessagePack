@@ -12,14 +12,19 @@ namespace Sekougi.MessagePack
             var longValue = ReadLong(stream);
             if (longValue > sbyte.MaxValue || longValue < sbyte.MinValue)
                 throw new OverflowException();
-            
+
             var value = (sbyte) longValue;
             return value;
         }
 
         public static byte ReadByte(Stream stream)
         {
-            throw new NotImplementedException();
+            var longValue = ReadUlong(stream);
+            if (longValue > byte.MaxValue)
+                throw new OverflowException();
+
+            var value = (byte) longValue;
+            return value;
         }
 
         public static short ReadShort(Stream stream)
@@ -27,14 +32,19 @@ namespace Sekougi.MessagePack
             var longValue = ReadLong(stream);
             if (longValue > short.MaxValue || longValue < short.MinValue)
                 throw new OverflowException();
-            
+
             var value = (short) longValue;
             return value;
         }
-        
-        public static ushort ReadUhort(Stream stream)
+
+        public static ushort ReadUshort(Stream stream)
         {
-            throw new NotImplementedException();
+            var longValue = ReadUlong(stream);
+            if (longValue > ushort.MaxValue)
+                throw new OverflowException();
+
+            var value = (ushort) longValue;
+            return value;
         }
 
         public static int ReadInt(Stream stream)
@@ -42,14 +52,19 @@ namespace Sekougi.MessagePack
             var longValue = ReadLong(stream);
             if (longValue > int.MaxValue || longValue < int.MinValue)
                 throw new OverflowException();
-            
+
             var value = (int) longValue;
             return value;
         }
 
-        public static uint Readuint(Stream stream)
+        public static uint ReadUint(Stream stream)
         {
-            throw new NotImplementedException();
+            var longValue = ReadUlong(stream);
+            if (longValue > uint.MaxValue)
+                throw new OverflowException();
+
+            var value = (uint) longValue;
+            return value;
         }
 
         public static long ReadLong(Stream stream)
@@ -60,7 +75,7 @@ namespace Sekougi.MessagePack
             if (isFixNum)
                 return (sbyte) typeCode;
 
-            if (typeCode == MessagePackTypeCode.INT8) 
+            if (typeCode == MessagePackTypeCode.INT8)
                 return (sbyte) stream.ReadByte();
 
             if (typeCode == MessagePackTypeCode.INT16)
@@ -71,13 +86,31 @@ namespace Sekougi.MessagePack
 
             if (typeCode == MessagePackTypeCode.INT64)
                 return ReadBigEndianLong(stream);
-            
+
             throw new OverflowException();
         }
 
         public static ulong ReadUlong(Stream stream)
         {
-            throw new NotImplementedException();
+            var typeCode = (byte) stream.ReadByte();
+
+            var isFixNum = typeCode >> 7 == 0;
+            if (isFixNum)
+                return typeCode;
+
+            if (typeCode == MessagePackTypeCode.UINT8)
+                return (byte) stream.ReadByte();
+
+            if (typeCode == MessagePackTypeCode.UINT16)
+                return ReadBigEndianUshort(stream);
+
+            if (typeCode == MessagePackTypeCode.UINT32)
+                return ReadBigEndianUint(stream);
+
+            if (typeCode == MessagePackTypeCode.UINT64)
+                return ReadBigEndianUlong(stream);
+
+            throw new OverflowException();
         }
 
         public static float ReadFloat(Stream stream)
@@ -119,7 +152,7 @@ namespace Sekougi.MessagePack
         {
             throw new NotImplementedException();
         }
-        
+
         // TODO: need to create normal serializer/deserializer for generic types
         public static T[] ReadArray<T>(Stream stream)
         {
@@ -131,7 +164,25 @@ namespace Sekougi.MessagePack
             throw new NotImplementedException();
         }
 
-        private static short ReadBigEndianShort(Stream stream)
+        private static ushort ReadBigEndianUshort(Stream stream)
+        {
+            var value = ReadBigEndianShort(stream);
+            return unchecked((ushort)value);
+        }
+
+        private static uint ReadBigEndianUint(Stream stream)
+        {
+            var value = ReadBigEndianInt(stream);
+            return unchecked((uint)value);
+        }
+
+        private static ulong ReadBigEndianUlong(Stream stream)
+        {
+            var value = ReadBigEndianLong(stream);
+            return unchecked((ulong)value);
+        }
+
+    private static short ReadBigEndianShort(Stream stream)
         {
             var bigEndian0 = (short) (stream.ReadByte() << 8);
             var bigEndian1 = (short) stream.ReadByte();

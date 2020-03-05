@@ -31,5 +31,21 @@ namespace Sekougi.MessagePack.Tests
             Assert.Equal(MessagePackPrimitivesReader.ReadLong(buffer), long.MinValue);
             Assert.Equal(MessagePackPrimitivesReader.ReadLong(buffer), long.MaxValue);
         }
+
+        [Fact]
+        public void UnsignedNumbersTest()
+        {
+            using var buffer = new MessagePackBuffer();
+            MessagePackPrimitivesWriter.Write(byte.MaxValue, buffer);
+            MessagePackPrimitivesWriter.Write(ushort.MaxValue, buffer);
+            MessagePackPrimitivesWriter.Write(uint.MaxValue, buffer);
+            MessagePackPrimitivesWriter.Write(ulong.MaxValue, buffer);
+
+            buffer.Position = 0;
+            Assert.Equal(MessagePackPrimitivesReader.ReadByte(buffer), byte.MaxValue);
+            Assert.Equal(MessagePackPrimitivesReader.ReadUshort(buffer), ushort.MaxValue);
+            Assert.Equal(MessagePackPrimitivesReader.ReadUint(buffer), uint.MaxValue);
+            Assert.Equal(MessagePackPrimitivesReader.ReadUlong(buffer), ulong.MaxValue);
+        }
     }
 }

@@ -10,28 +10,16 @@ namespace Sekougi.MessagePack.ConsoleTest
         static void Main()
         {
             using var buffer = new MessagePackBuffer();
-            MessagePackPrimitivesWriter.Write(-1, buffer);
-            MessagePackPrimitivesWriter.Write(1, buffer);
-            MessagePackPrimitivesWriter.Write(sbyte.MinValue, buffer);
-            MessagePackPrimitivesWriter.Write(sbyte.MaxValue, buffer);
-            MessagePackPrimitivesWriter.Write(short.MinValue, buffer);
-            MessagePackPrimitivesWriter.Write(short.MaxValue, buffer);
-            MessagePackPrimitivesWriter.Write(int.MinValue, buffer);
-            MessagePackPrimitivesWriter.Write(int.MaxValue, buffer);
-            MessagePackPrimitivesWriter.Write(long.MinValue, buffer);
-            MessagePackPrimitivesWriter.Write(long.MaxValue, buffer);
+            MessagePackPrimitivesWriter.Write(byte.MaxValue, buffer);
+            MessagePackPrimitivesWriter.Write(ushort.MaxValue, buffer);
+            MessagePackPrimitivesWriter.Write(uint.MaxValue, buffer);
+            MessagePackPrimitivesWriter.Write(ulong.MaxValue, buffer);
 
             buffer.Position = 0;
-            var negativeOne = MessagePackPrimitivesReader.ReadInt(buffer);
-            var positiveOne = MessagePackPrimitivesReader.ReadInt(buffer);
-            var sbyteValueMin = MessagePackPrimitivesReader.ReadSbyte(buffer);
-            var sbyteValueMax = MessagePackPrimitivesReader.ReadSbyte(buffer);
-            var shortValueMin = MessagePackPrimitivesReader.ReadInt(buffer);
-            var shortValueMax = MessagePackPrimitivesReader.ReadInt(buffer);
-            var intValueMin = MessagePackPrimitivesReader.ReadInt(buffer);
-            var intValueMax = MessagePackPrimitivesReader.ReadInt(buffer);
-            var longValueMin = MessagePackPrimitivesReader.ReadLong(buffer);
-            var longValueMax = MessagePackPrimitivesReader.ReadLong(buffer);
+            var byteValue = MessagePackPrimitivesReader.ReadByte(buffer);
+            var ushortValue = MessagePackPrimitivesReader.ReadUshort(buffer);
+            var uintValue = MessagePackPrimitivesReader.ReadUint(buffer);
+            var ulongValue = MessagePackPrimitivesReader.ReadUlong(buffer);
         }
     }
 }
