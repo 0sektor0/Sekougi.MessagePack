@@ -30,8 +30,8 @@ namespace Sekougi.MessagePack.ConsoleTest
             var shortValueMax = MessagePackPrimitivesReader.ReadInt(buffer);
             var intValueMin = MessagePackPrimitivesReader.ReadInt(buffer);
             var intValueMax = MessagePackPrimitivesReader.ReadInt(buffer);
-            var longValueMin = MessagePackPrimitivesReader.ReadShort(buffer);
-            var longValueMax = MessagePackPrimitivesReader.ReadShort(buffer);
+            var longValueMin = MessagePackPrimitivesReader.ReadLong(buffer);
+            var longValueMax = MessagePackPrimitivesReader.ReadLong(buffer);
         }
     }
 }
