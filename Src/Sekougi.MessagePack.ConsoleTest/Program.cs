@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Sekougi.MessagePack.Serializers;
 
 
 
@@ -8,7 +8,7 @@ namespace Sekougi.MessagePack.ConsoleTest
     {
         static void Main()
         {
-            
+            var serializer = MessagePackSerializersReposetory.Get<int[]>();
         }
     }
 }

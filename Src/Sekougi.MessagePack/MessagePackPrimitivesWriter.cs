@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Sekougi.MessagePack
 {
-    public static class MessagePackWriter
+    public static class MessagePackPrimitivesWriter
     {
         public static void WriteNull(IMessagePackBuffer buffer)
         {

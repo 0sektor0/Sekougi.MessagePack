@@ -12,8 +12,8 @@ namespace Sekougi.MessagePack.Tests
         public void BoolTest()
         {
             using var buffer = new MessagePackBuffer(2);
-            MessagePackWriter.Write(false, buffer);
-            MessagePackWriter.Write(true, buffer);
+            MessagePackPrimitivesWriter.Write(false, buffer);
+            MessagePackPrimitivesWriter.Write(true, buffer);
 
             var data = buffer.GetAll();
             Assert.Equal(2, data.Length);
@@ -28,51 +28,51 @@ namespace Sekougi.MessagePack.Tests
             var capacity = 39;
             using var buffer = new MessagePackBuffer(capacity);
                 
-            MessagePackWriter.Write((byte)0, buffer);
-            MessagePackWriter.Write((sbyte)0, buffer);
-            MessagePackWriter.Write((short)0, buffer);
-            MessagePackWriter.Write((ushort)0, buffer);
-            MessagePackWriter.Write((int)0, buffer);
-            MessagePackWriter.Write((uint)0, buffer);
-            MessagePackWriter.Write((long)0, buffer);
-            MessagePackWriter.Write((ulong)0, buffer);
+            MessagePackPrimitivesWriter.Write((byte)0, buffer);
+            MessagePackPrimitivesWriter.Write((sbyte)0, buffer);
+            MessagePackPrimitivesWriter.Write((short)0, buffer);
+            MessagePackPrimitivesWriter.Write((ushort)0, buffer);
+            MessagePackPrimitivesWriter.Write((int)0, buffer);
+            MessagePackPrimitivesWriter.Write((uint)0, buffer);
+            MessagePackPrimitivesWriter.Write((long)0, buffer);
+            MessagePackPrimitivesWriter.Write((ulong)0, buffer);
                 
-            MessagePackWriter.Write((byte)64, buffer);
-            MessagePackWriter.Write((sbyte)64, buffer);
-            MessagePackWriter.Write((short)64, buffer);
-            MessagePackWriter.Write((ushort)64, buffer);
-            MessagePackWriter.Write((int)64, buffer);
-            MessagePackWriter.Write((uint)64, buffer);
-            MessagePackWriter.Write((long)64, buffer);
-            MessagePackWriter.Write((ulong)64, buffer);
+            MessagePackPrimitivesWriter.Write((byte)64, buffer);
+            MessagePackPrimitivesWriter.Write((sbyte)64, buffer);
+            MessagePackPrimitivesWriter.Write((short)64, buffer);
+            MessagePackPrimitivesWriter.Write((ushort)64, buffer);
+            MessagePackPrimitivesWriter.Write((int)64, buffer);
+            MessagePackPrimitivesWriter.Write((uint)64, buffer);
+            MessagePackPrimitivesWriter.Write((long)64, buffer);
+            MessagePackPrimitivesWriter.Write((ulong)64, buffer);
                 
-            MessagePackWriter.Write((byte)127, buffer);
-            MessagePackWriter.Write((sbyte)127, buffer);
-            MessagePackWriter.Write((short)127, buffer);
-            MessagePackWriter.Write((ushort)127, buffer);
-            MessagePackWriter.Write((int)127, buffer);
-            MessagePackWriter.Write((uint)127, buffer);
-            MessagePackWriter.Write((long)127, buffer);
-            MessagePackWriter.Write((ulong)127, buffer);
+            MessagePackPrimitivesWriter.Write((byte)127, buffer);
+            MessagePackPrimitivesWriter.Write((sbyte)127, buffer);
+            MessagePackPrimitivesWriter.Write((short)127, buffer);
+            MessagePackPrimitivesWriter.Write((ushort)127, buffer);
+            MessagePackPrimitivesWriter.Write((int)127, buffer);
+            MessagePackPrimitivesWriter.Write((uint)127, buffer);
+            MessagePackPrimitivesWriter.Write((long)127, buffer);
+            MessagePackPrimitivesWriter.Write((ulong)127, buffer);
                 
-            MessagePackWriter.Write((sbyte)-1, buffer);
-            MessagePackWriter.Write((short)-1, buffer);
-            MessagePackWriter.Write((int)-1, buffer);
-            MessagePackWriter.Write((long)-1, buffer);
+            MessagePackPrimitivesWriter.Write((sbyte)-1, buffer);
+            MessagePackPrimitivesWriter.Write((short)-1, buffer);
+            MessagePackPrimitivesWriter.Write((int)-1, buffer);
+            MessagePackPrimitivesWriter.Write((long)-1, buffer);
                 
-            MessagePackWriter.Write((sbyte)-16, buffer);
-            MessagePackWriter.Write((short)-16, buffer);
-            MessagePackWriter.Write((int)-16, buffer);
-            MessagePackWriter.Write((long)-16, buffer);
+            MessagePackPrimitivesWriter.Write((sbyte)-16, buffer);
+            MessagePackPrimitivesWriter.Write((short)-16, buffer);
+            MessagePackPrimitivesWriter.Write((int)-16, buffer);
+            MessagePackPrimitivesWriter.Write((long)-16, buffer);
                 
-            MessagePackWriter.Write((sbyte)-32, buffer);
-            MessagePackWriter.Write((short)-32, buffer);
-            MessagePackWriter.Write((int)-32, buffer);
-            MessagePackWriter.Write((long)-32, buffer);
+            MessagePackPrimitivesWriter.Write((sbyte)-32, buffer);
+            MessagePackPrimitivesWriter.Write((short)-32, buffer);
+            MessagePackPrimitivesWriter.Write((int)-32, buffer);
+            MessagePackPrimitivesWriter.Write((long)-32, buffer);
                 
             // out of bounds
-            MessagePackWriter.Write((long) 1, buffer);
-            MessagePackWriter.Write((long) -33, buffer);
+            MessagePackPrimitivesWriter.Write((long) 1, buffer);
+            MessagePackPrimitivesWriter.Write((long) -33, buffer);
 
             var data = buffer.GetAll();
             Assert.Equal(data.Length, capacity);
@@ -125,8 +125,8 @@ namespace Sekougi.MessagePack.Tests
             var capacity = 3;
             using var buffer = new MessagePackBuffer(capacity);
             
-            MessagePackWriter.Write(sbyte.MinValue, buffer);
-            MessagePackWriter.Write(sbyte.MaxValue, buffer);
+            MessagePackPrimitivesWriter.Write(sbyte.MinValue, buffer);
+            MessagePackPrimitivesWriter.Write(sbyte.MaxValue, buffer);
             
             var data = buffer.GetAll();
             Assert.Equal(data.Length, capacity);
@@ -141,7 +141,7 @@ namespace Sekougi.MessagePack.Tests
             var capacity = 2;
             using var buffer = new MessagePackBuffer(capacity);
             
-            MessagePackWriter.Write(byte.MaxValue, buffer);
+            MessagePackPrimitivesWriter.Write(byte.MaxValue, buffer);
             
             var data = buffer.GetAll();
             Assert.Equal(data.Length, capacity);
@@ -155,8 +155,8 @@ namespace Sekougi.MessagePack.Tests
             var capacity = 6;
             using var buffer = new MessagePackBuffer(capacity);
             
-            MessagePackWriter.Write(short.MinValue, buffer);
-            MessagePackWriter.Write(short.MaxValue, buffer);
+            MessagePackPrimitivesWriter.Write(short.MinValue, buffer);
+            MessagePackPrimitivesWriter.Write(short.MaxValue, buffer);
             
             var data = buffer.GetAll();
             Assert.Equal(data.Length, capacity);
@@ -178,7 +178,7 @@ namespace Sekougi.MessagePack.Tests
             var capacity = 3;
             using var buffer = new MessagePackBuffer(capacity);
             
-            MessagePackWriter.Write(ushort.MaxValue, buffer);
+            MessagePackPrimitivesWriter.Write(ushort.MaxValue, buffer);
             
             var data = buffer.GetAll();
             Assert.Equal(data.Length, capacity);
@@ -194,8 +194,8 @@ namespace Sekougi.MessagePack.Tests
             var capacity = 10;
             using var buffer = new MessagePackBuffer(capacity);
             
-            MessagePackWriter.Write(int.MinValue, buffer);
-            MessagePackWriter.Write(int.MaxValue, buffer);
+            MessagePackPrimitivesWriter.Write(int.MinValue, buffer);
+            MessagePackPrimitivesWriter.Write(int.MaxValue, buffer);
             
             var data = buffer.GetAll();
             Assert.Equal(data.Length, capacity);
@@ -221,7 +221,7 @@ namespace Sekougi.MessagePack.Tests
             var capacity = 5;
             using var buffer = new MessagePackBuffer(capacity);
             
-            MessagePackWriter.Write(uint.MaxValue, buffer);
+            MessagePackPrimitivesWriter.Write(uint.MaxValue, buffer);
             
             var data = buffer.GetAll();
             Assert.Equal(data.Length, capacity);
@@ -239,8 +239,8 @@ namespace Sekougi.MessagePack.Tests
             var capacity = 18;
             using var buffer = new MessagePackBuffer(capacity);
             
-            MessagePackWriter.Write(long.MaxValue, buffer);
-            MessagePackWriter.Write(long.MinValue, buffer);
+            MessagePackPrimitivesWriter.Write(long.MaxValue, buffer);
+            MessagePackPrimitivesWriter.Write(long.MinValue, buffer);
             
             var data = buffer.GetAll();
             Assert.Equal(data.Length, capacity);
@@ -274,7 +274,7 @@ namespace Sekougi.MessagePack.Tests
             var capacity = 9;
             using var buffer = new MessagePackBuffer(capacity);
             
-            MessagePackWriter.Write(ulong.MaxValue, buffer);
+            MessagePackPrimitivesWriter.Write(ulong.MaxValue, buffer);
             
             var data = buffer.GetAll();
             Assert.Equal(data.Length, capacity);
@@ -296,8 +296,8 @@ namespace Sekougi.MessagePack.Tests
             var capacity = 10;
             using var buffer = new MessagePackBuffer(capacity);
             
-            MessagePackWriter.Write(float.MaxValue, buffer);
-            MessagePackWriter.Write(float.MinValue, buffer);
+            MessagePackPrimitivesWriter.Write(float.MaxValue, buffer);
+            MessagePackPrimitivesWriter.Write(float.MinValue, buffer);
             
             var data = buffer.GetAll();
             Assert.Equal(data.Length, capacity);
@@ -323,8 +323,8 @@ namespace Sekougi.MessagePack.Tests
             var capacity = 18;
             using var buffer = new MessagePackBuffer(capacity);
             
-            MessagePackWriter.Write(double.MinValue, buffer);
-            MessagePackWriter.Write(double.MaxValue, buffer);
+            MessagePackPrimitivesWriter.Write(double.MinValue, buffer);
+            MessagePackPrimitivesWriter.Write(double.MaxValue, buffer);
             
             var data = buffer.GetAll();
             Assert.Equal(data.Length, capacity);
@@ -358,7 +358,7 @@ namespace Sekougi.MessagePack.Tests
             var capacity = 1;
             using var buffer = new MessagePackBuffer(capacity);
             
-            MessagePackWriter.WriteNull(buffer);
+            MessagePackPrimitivesWriter.WriteNull(buffer);
             
             var data = buffer.GetAll();
             Assert.Equal(data.Length, capacity);
@@ -371,7 +371,7 @@ namespace Sekougi.MessagePack.Tests
             var capacity = 1;
             using var buffer = new MessagePackBuffer(capacity);
             
-            MessagePackWriter.Write(null, Encoding.UTF8, buffer);
+            MessagePackPrimitivesWriter.Write(null, Encoding.UTF8, buffer);
             
             var data = buffer.GetAll();
             Assert.Equal(data.Length, capacity);
@@ -384,7 +384,7 @@ namespace Sekougi.MessagePack.Tests
             var capacity = 2;
             using var buffer = new MessagePackBuffer(capacity);
             
-            MessagePackWriter.Write("a", Encoding.UTF8, buffer);
+            MessagePackPrimitivesWriter.Write("a", Encoding.UTF8, buffer);
             
             var data = buffer.GetAll();
             Assert.Equal(data.Length, capacity);
@@ -399,7 +399,7 @@ namespace Sekougi.MessagePack.Tests
             using var buffer = new MessagePackBuffer(6);
             
             var date = new DateTime(1970,1,1);
-            MessagePackWriter.Write(date, buffer);
+            MessagePackPrimitivesWriter.Write(date, buffer);
             
             var data = buffer.GetAll();
             Assert.Equal(data.Length, capacity);
@@ -418,7 +418,7 @@ namespace Sekougi.MessagePack.Tests
             using var buffer = new MessagePackBuffer(6);
             
             var date = new DateTime(1970,1,1, 0, 0, 0, 1);
-            MessagePackWriter.Write(date, buffer);
+            MessagePackPrimitivesWriter.Write(date, buffer);
             
             var data = buffer.GetAll();
             Assert.Equal(data.Length, capacity);
