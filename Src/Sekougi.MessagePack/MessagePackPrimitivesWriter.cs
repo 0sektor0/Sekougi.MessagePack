@@ -1,6 +1,6 @@
 using System;
 using System.Text;
-
+using Sekougi.MessagePack.Exceptions;
 
 
 namespace Sekougi.MessagePack
@@ -12,6 +12,7 @@ namespace Sekougi.MessagePack
             buffer.WriteByte(MessagePackTypeCode.NIL);
         }
 
+        // TODO: find way to avoid allocations on string to byte[] cast
         public static void Write(string str, Encoding encoding, IMessagePackBuffer buffer)
         {
             var bytes = str != null ? encoding.GetBytes(str) : null;

@@ -47,5 +47,21 @@ namespace Sekougi.MessagePack.Tests
             Assert.Equal(MessagePackPrimitivesReader.ReadUint(buffer), uint.MaxValue);
             Assert.Equal(MessagePackPrimitivesReader.ReadUlong(buffer), ulong.MaxValue);
         }
+
+        [Fact]
+        public void FloatingPointNumbersTest()
+        {
+            using var buffer = new MessagePackBuffer();
+            MessagePackPrimitivesWriter.Write(float.MaxValue, buffer);
+            MessagePackPrimitivesWriter.Write(float.MinValue, buffer);
+            MessagePackPrimitivesWriter.Write(double.MaxValue, buffer);
+            MessagePackPrimitivesWriter.Write(double.MinValue, buffer);
+
+            buffer.Position = 0;
+            Assert.Equal(MessagePackPrimitivesReader.ReadFloat(buffer), float.MaxValue);
+            Assert.Equal(MessagePackPrimitivesReader.ReadFloat(buffer), float.MinValue);
+            Assert.Equal(MessagePackPrimitivesReader.ReadDouble(buffer), double.MaxValue);
+            Assert.Equal(MessagePackPrimitivesReader.ReadDouble(buffer), double.MinValue);
+        }
     }
 }

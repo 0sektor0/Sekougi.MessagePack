@@ -1,4 +1,4 @@
-namespace Sekougi.MessagePack
+namespace Sekougi.MessagePack.Exceptions
 {
     public class MessagePackStringTooLongException : MessagePackException
     {

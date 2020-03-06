@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using Sekougi.MessagePack.Serializers;
 
 
@@ -10,16 +11,10 @@ namespace Sekougi.MessagePack.ConsoleTest
         static void Main()
         {
             using var buffer = new MessagePackBuffer();
-            MessagePackPrimitivesWriter.Write(byte.MaxValue, buffer);
-            MessagePackPrimitivesWriter.Write(ushort.MaxValue, buffer);
-            MessagePackPrimitivesWriter.Write(uint.MaxValue, buffer);
-            MessagePackPrimitivesWriter.Write(ulong.MaxValue, buffer);
+            MessagePackPrimitivesWriter.Write("test", Encoding.UTF8, buffer);
 
             buffer.Position = 0;
-            var byteValue = MessagePackPrimitivesReader.ReadByte(buffer);
-            var ushortValue = MessagePackPrimitivesReader.ReadUshort(buffer);
-            var uintValue = MessagePackPrimitivesReader.ReadUint(buffer);
-            var ulongValue = MessagePackPrimitivesReader.ReadUlong(buffer);
+            var str = MessagePackPrimitivesReader.ReadString(buffer, Encoding.UTF8);
         }
     }
 }
