@@ -130,7 +130,7 @@ namespace Sekougi.MessagePack.Tests
             
             var data = buffer.GetAll();
             Assert.Equal(data.Length, capacity);
-            Assert.Equal(data[0], MessagePackTypeCode.INT8);
+            Assert.Equal(data[0], 208);
             Assert.Equal(data[1], 128);
             Assert.Equal(data[2], 127);
         }
@@ -145,7 +145,7 @@ namespace Sekougi.MessagePack.Tests
             
             var data = buffer.GetAll();
             Assert.Equal(data.Length, capacity);
-            Assert.Equal(data[0], MessagePackTypeCode.UINT8);
+            Assert.Equal(data[0], 204);
             Assert.Equal(data[1], 255);
         }
         
@@ -162,12 +162,12 @@ namespace Sekougi.MessagePack.Tests
             Assert.Equal(data.Length, capacity);
             
             var firstValue = data.Slice(0, 3);
-            Assert.Equal(firstValue[0], MessagePackTypeCode.INT16);
+            Assert.Equal(firstValue[0], 209);
             Assert.Equal(firstValue[1], 128);
             Assert.Equal(firstValue[2], 0);
             
             var secondValue = data.Slice(3, 3);
-            Assert.Equal(secondValue[0], MessagePackTypeCode.INT16);
+            Assert.Equal(secondValue[0], 209);
             Assert.Equal(secondValue[1], 127);
             Assert.Equal(secondValue[2], 255);
         }
@@ -183,7 +183,7 @@ namespace Sekougi.MessagePack.Tests
             var data = buffer.GetAll();
             Assert.Equal(data.Length, capacity);
             
-            Assert.Equal(data[0], MessagePackTypeCode.UINT16);
+            Assert.Equal(data[0], 205);
             Assert.Equal(data[1], 255);
             Assert.Equal(data[2], 255);
         }
@@ -201,14 +201,14 @@ namespace Sekougi.MessagePack.Tests
             Assert.Equal(data.Length, capacity);
             
             var firstValue = data.Slice(0, 5);
-            Assert.Equal(firstValue[0], MessagePackTypeCode.INT32);
+            Assert.Equal(firstValue[0], 210);
             Assert.Equal(firstValue[1], 128);
             Assert.Equal(firstValue[2], 0);
             Assert.Equal(firstValue[3], 0);
             Assert.Equal(firstValue[4], 0);
             
             var secondValue = data.Slice(5, 5);
-            Assert.Equal(secondValue[0], MessagePackTypeCode.INT32);
+            Assert.Equal(secondValue[0], 210);
             Assert.Equal(secondValue[1], 127);
             Assert.Equal(secondValue[2], 255);
             Assert.Equal(secondValue[3], 255);
@@ -226,7 +226,7 @@ namespace Sekougi.MessagePack.Tests
             var data = buffer.GetAll();
             Assert.Equal(data.Length, capacity);
             
-            Assert.Equal(data[0], MessagePackTypeCode.UINT32);
+            Assert.Equal(data[0], 206);
             Assert.Equal(data[1], 255);
             Assert.Equal(data[2], 255);
             Assert.Equal(data[3], 255);
@@ -246,7 +246,7 @@ namespace Sekougi.MessagePack.Tests
             Assert.Equal(data.Length, capacity);
             
             var firstValue = data.Slice(0, 9);
-            Assert.Equal(firstValue[0], MessagePackTypeCode.INT64);
+            Assert.Equal(firstValue[0], 211);
             Assert.Equal(firstValue[1], 127);
             Assert.Equal(firstValue[2], 255);
             Assert.Equal(firstValue[3], 255);
@@ -257,7 +257,7 @@ namespace Sekougi.MessagePack.Tests
             Assert.Equal(firstValue[8], 255);
             
             var secondValue = data.Slice(9, 9);
-            Assert.Equal(secondValue[0], MessagePackTypeCode.INT64);
+            Assert.Equal(secondValue[0], 211);
             Assert.Equal(secondValue[1], 128);
             Assert.Equal(secondValue[2], 0);
             Assert.Equal(secondValue[3], 0);
@@ -279,7 +279,7 @@ namespace Sekougi.MessagePack.Tests
             var data = buffer.GetAll();
             Assert.Equal(data.Length, capacity);
             
-            Assert.Equal(data[0], MessagePackTypeCode.UINT64);
+            Assert.Equal(data[0], 207);
             Assert.Equal(data[1], 255);
             Assert.Equal(data[2], 255);
             Assert.Equal(data[3], 255);
@@ -303,14 +303,14 @@ namespace Sekougi.MessagePack.Tests
             Assert.Equal(data.Length, capacity);
             
             var firstValue = data.Slice(0, 5);
-            Assert.Equal(firstValue[0], MessagePackTypeCode.FLOAT32);
+            Assert.Equal(firstValue[0], 202);
             Assert.Equal(firstValue[1], 127);
             Assert.Equal(firstValue[2], 127);
             Assert.Equal(firstValue[3], 255);
             Assert.Equal(firstValue[4], 255);
             
             var secondValue = data.Slice(5, 5);
-            Assert.Equal(secondValue[0], MessagePackTypeCode.FLOAT32);
+            Assert.Equal(secondValue[0], 202);
             Assert.Equal(secondValue[1], 255);
             Assert.Equal(secondValue[2], 127);
             Assert.Equal(secondValue[3], 255);
@@ -330,7 +330,7 @@ namespace Sekougi.MessagePack.Tests
             Assert.Equal(data.Length, capacity);
             
             var firstValue = data.Slice(0, 9);
-            Assert.Equal(firstValue[0], MessagePackTypeCode.FLOAT64);
+            Assert.Equal(firstValue[0], 203);
             Assert.Equal(firstValue[1], 255);
             Assert.Equal(firstValue[2], 239);
             Assert.Equal(firstValue[3], 255);
@@ -341,7 +341,7 @@ namespace Sekougi.MessagePack.Tests
             Assert.Equal(firstValue[8], 255);
             
             var secondValue = data.Slice(9, 9);
-            Assert.Equal(secondValue[0], MessagePackTypeCode.FLOAT64);
+            Assert.Equal(secondValue[0], 203);
             Assert.Equal(secondValue[1], 127);
             Assert.Equal(secondValue[2], 239);
             Assert.Equal(secondValue[3], 255);
@@ -362,7 +362,7 @@ namespace Sekougi.MessagePack.Tests
             
             var data = buffer.GetAll();
             Assert.Equal(data.Length, capacity);
-            Assert.Equal(data[0], MessagePackTypeCode.NIL);
+            Assert.Equal(data[0], 192);
         }
 
         [Fact]
@@ -375,7 +375,7 @@ namespace Sekougi.MessagePack.Tests
             
             var data = buffer.GetAll();
             Assert.Equal(data.Length, capacity);
-            Assert.Equal(data[0], MessagePackTypeCode.NIL);
+            Assert.Equal(data[0], 192);
         }
 
         [Fact] 
@@ -403,7 +403,7 @@ namespace Sekougi.MessagePack.Tests
             
             var data = buffer.GetAll();
             Assert.Equal(data.Length, capacity);
-            Assert.Equal(data[0], MessagePackTypeCode.TIMESTAMP32);
+            Assert.Equal(data[0], 214);
             Assert.Equal(data[1], 255);
             Assert.Equal(data[2], 0);
             Assert.Equal(data[3], 0);
@@ -422,7 +422,7 @@ namespace Sekougi.MessagePack.Tests
             
             var data = buffer.GetAll();
             Assert.Equal(data.Length, capacity);
-            Assert.Equal(data[0], MessagePackTypeCode.TIMESTAMP64);
+            Assert.Equal(data[0], 215);
             Assert.Equal(data[1], 255);
             Assert.Equal(data[2], 0);
             Assert.Equal(data[3], 61);

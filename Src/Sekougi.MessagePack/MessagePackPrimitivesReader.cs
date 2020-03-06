@@ -8,6 +8,10 @@ namespace Sekougi.MessagePack
 {
     public static class MessagePackPrimitivesReader
     {
+        private const byte MOVED_FIX_INT_CODE = MessagePackTypeCode.FIX_INT >> 5;
+        private const byte MOVED_FIX_STR_CODE = MessagePackTypeCode.FIX_STRING >> 5;
+        
+        
         public static sbyte ReadSbyte(Stream stream)
         {
             var longValue = ReadLong(stream);
@@ -72,7 +76,7 @@ namespace Sekougi.MessagePack
         {
             var typeCode = (byte) stream.ReadByte();
 
-            var isFixNum = typeCode >> 5 == 7 || typeCode >> 7 == 0;
+            var isFixNum = typeCode >> 5 == MOVED_FIX_INT_CODE || typeCode >> 7 == 0;
             if (isFixNum)
                 return (sbyte) typeCode;
 
@@ -147,9 +151,9 @@ namespace Sekougi.MessagePack
             var typeCode = (byte) stream.ReadByte();
             int bytesLength;
 
-            var isFixStr = typeCode >> 5 == 5;
+            var isFixStr = typeCode >> 5 == MOVED_FIX_STR_CODE;
             if (isFixStr)
-                bytesLength = typeCode - MessagePackTypeCode.FIX_STR;
+                bytesLength = typeCode - MessagePackTypeCode.FIX_STRING;
             else switch (typeCode)
             {
                 case MessagePackTypeCode.STR8: 
