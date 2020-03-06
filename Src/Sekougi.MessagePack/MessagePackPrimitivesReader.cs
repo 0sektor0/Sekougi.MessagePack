@@ -2,6 +2,7 @@ using System;
 using System.Buffers;
 using System.IO;
 using System.Text;
+using Sekougi.MessagePack.Exceptions;
 
 
 namespace Sekougi.MessagePack
@@ -156,16 +157,22 @@ namespace Sekougi.MessagePack
                 bytesLength = typeCode - MessagePackTypeCode.FIX_STRING;
             else switch (typeCode)
             {
+                case MessagePackTypeCode.NIL:
+                    return null;
+                
                 case MessagePackTypeCode.STR8: 
                     bytesLength = stream.ReadByte();
                     break;
                 
                 case MessagePackTypeCode.STR16:
-                    bytesLength = ReadBigEndianShort(stream);
+                    bytesLength = ReadBigEndianUshort(stream);
                     break;
                 
                 case MessagePackTypeCode.STR32:
-                    bytesLength = ReadBigEndianInt(stream);
+                    var length = ReadBigEndianUint(stream);
+                    if (length > int.MaxValue)
+                        throw new MessagePackStringTooLongException("string too long");
+                    bytesLength = (int) length;
                     break;
                 
                 default:
@@ -176,6 +183,37 @@ namespace Sekougi.MessagePack
             return str;
         }
 
+        private static string ReadStringInternal(Stream stream, Encoding encoding, int bytesLength)
+        {
+            if (bytesLength == 0)
+            {
+                return "";
+            }
+            
+            if (bytesLength < 0)
+            {
+                throw new IndexOutOfRangeException();
+            }
+            
+            var bytes = ArrayPool<byte>.Shared.Rent(bytesLength);
+
+            try
+            {
+                var buffer = new Span<byte>(bytes, 0, bytesLength);
+                stream.Read(buffer);
+                
+                return encoding.GetString(buffer);
+            }
+            catch (Exception exception)
+            {
+                throw exception;
+            }
+            finally
+            {
+                ArrayPool<byte>.Shared.Return(bytes);
+            }
+        }
+        
         public static DateTime ReadDateTime(Stream stream)
         {
             throw new NotImplementedException();
@@ -194,27 +232,6 @@ namespace Sekougi.MessagePack
         public static int ReadArrayLength(Stream stream)
         {
             throw new NotImplementedException();
-        }
-
-        private static string ReadStringInternal(Stream stream, Encoding encoding, int bytesLength)
-        {
-            var bytes = ArrayPool<byte>.Shared.Rent(bytesLength);
-
-            try
-            {
-                var buffer = new Span<byte>(bytes, 0, bytesLength);
-                stream.Read(buffer);
-                
-                return encoding.GetString(buffer);
-            }
-            catch (Exception ex)
-            {
-                throw ex;
-            }
-            finally
-            {
-                ArrayPool<byte>.Shared.Return(bytes);
-            }
         }
         
         private static ushort ReadBigEndianUshort(Stream stream)

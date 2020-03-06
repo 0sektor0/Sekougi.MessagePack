@@ -1,3 +1,5 @@
+using System;
+using System.Text;
 using Xunit;
 
 namespace Sekougi.MessagePack.Tests
@@ -62,6 +64,31 @@ namespace Sekougi.MessagePack.Tests
             Assert.Equal(MessagePackPrimitivesReader.ReadFloat(buffer), float.MinValue);
             Assert.Equal(MessagePackPrimitivesReader.ReadDouble(buffer), double.MaxValue);
             Assert.Equal(MessagePackPrimitivesReader.ReadDouble(buffer), double.MinValue);
+        }
+
+        [Fact]
+        public void StringTest()
+        {
+            var shortStr = new string(new char[31]);
+            var str8 = new string(new char[byte.MaxValue - 10]);
+            var str16 = new string(new char[ushort.MaxValue - 10]);
+            var str32 = new string(new char[ushort.MaxValue + 10]);
+            
+            using var buffer = new MessagePackBuffer();
+            MessagePackPrimitivesWriter.Write(null, Encoding.UTF8, buffer);
+            MessagePackPrimitivesWriter.Write("", Encoding.UTF8, buffer);
+            MessagePackPrimitivesWriter.Write(shortStr, Encoding.UTF8, buffer);
+            MessagePackPrimitivesWriter.Write(str8, Encoding.UTF8, buffer);
+            MessagePackPrimitivesWriter.Write(str16, Encoding.UTF8, buffer);
+            MessagePackPrimitivesWriter.Write(str32, Encoding.UTF8, buffer);
+
+            buffer.Position = 0;
+            Assert.Equal(MessagePackPrimitivesReader.ReadString(buffer, Encoding.UTF8), null);
+            Assert.Equal(MessagePackPrimitivesReader.ReadString(buffer, Encoding.UTF8), "");
+            Assert.Equal(MessagePackPrimitivesReader.ReadString(buffer, Encoding.UTF8), shortStr);
+            Assert.Equal(MessagePackPrimitivesReader.ReadString(buffer, Encoding.UTF8), str8);
+            Assert.Equal(MessagePackPrimitivesReader.ReadString(buffer, Encoding.UTF8), str16);
+            Assert.Equal(MessagePackPrimitivesReader.ReadString(buffer, Encoding.UTF8), str32);
         }
     }
 }

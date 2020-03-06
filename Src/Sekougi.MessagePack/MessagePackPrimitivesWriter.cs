@@ -241,10 +241,8 @@ namespace Sekougi.MessagePack
                 WriteBinaryData8(MessagePackTypeCode.STR8, stringBytes, buffer);
             else if (stringBytes.Length < ushort.MaxValue)
                 WriteBinaryData16(MessagePackTypeCode.STR16, stringBytes, buffer);
-            else if (stringBytes.Length < uint.MaxValue)
-                WriteBinaryData32(MessagePackTypeCode.STR32, stringBytes, buffer);
             else
-                throw new MessagePackStringTooLongException("max len must be less then (2^32)-1 bytes");
+                WriteBinaryData32(MessagePackTypeCode.STR32, stringBytes, buffer);
         }
         
         private static void WriteFixString(byte[] stringBytes, IMessagePackBuffer buffer)
@@ -276,7 +274,7 @@ namespace Sekougi.MessagePack
         {
             buffer.WriteByte(typeCode);
             
-            var byteSize = (uint) bytes.Length;
+            var byteSize = bytes.Length;
             WriteBigEndian(byteSize, buffer);
             buffer.Write(bytes);
         }
