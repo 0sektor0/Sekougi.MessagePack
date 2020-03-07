@@ -3,6 +3,7 @@ using System.Text;
 using Sekougi.MessagePack.Exceptions;
 
 
+
 namespace Sekougi.MessagePack
 {
     public static class MessagePackPrimitivesWriter
@@ -37,7 +38,7 @@ namespace Sekougi.MessagePack
                 MessagePackTypeCode.ARRAY16, MessagePackTypeCode.ARRAY32, buffer);
         }
 
-        public static void WriteMapHeader(int length, IMessagePackBuffer buffer)
+        public static void WriteDictionaryHeader(int length, IMessagePackBuffer buffer)
         {
             WriteCollectionHeader(length, MessagePackTypeCode.FIX_MAP, 
                 MessagePackTypeCode.MAP16, MessagePackTypeCode.MAP32, buffer);
@@ -182,8 +183,8 @@ namespace Sekougi.MessagePack
             if (seconds >> 34 == 0)
             {
                 var data64 = unchecked((ulong)((nanoseconds << 34) | seconds));
-                var isZeroNanoSeconds = (data64 & 0xffffffff00000000L) == 0;
-                if (isZeroNanoSeconds)
+                
+                if (nanoseconds == 0)
                 {
                     var data32 = (uint)data64;
                     buffer.WriteByte(MessagePackTypeCode.TIMESTAMP32);
