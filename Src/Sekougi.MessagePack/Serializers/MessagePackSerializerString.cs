@@ -1,5 +1,5 @@
 using System.IO;
-
+using System.Text;
 
 
 namespace Sekougi.MessagePack.Serializers
@@ -8,12 +8,12 @@ namespace Sekougi.MessagePack.Serializers
     {
         public override void Serialize(IMessagePackBuffer buffer, string value)
         {
-            throw new System.NotImplementedException();
+            MessagePackPrimitivesWriter.Write(value, Encoding.UTF8, buffer);
         }
 
         public override string Deserialize(Stream stream)
         {
-            throw new System.NotImplementedException();
+            return MessagePackPrimitivesReader.ReadString(stream, Encoding.UTF8);
         }
     }
 }

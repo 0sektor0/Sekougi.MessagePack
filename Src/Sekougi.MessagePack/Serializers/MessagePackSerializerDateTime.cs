@@ -9,12 +9,12 @@ namespace Sekougi.MessagePack.Serializers
     {
         public override void Serialize(IMessagePackBuffer buffer, DateTime value)
         {
-            throw new NotImplementedException();
+            MessagePackPrimitivesWriter.Write(value, buffer);
         }
 
         public override DateTime Deserialize(Stream stream)
         {
-            throw new NotImplementedException();
+            return MessagePackPrimitivesReader.ReadDateTime(stream);
         }
     }
 }

@@ -8,12 +8,12 @@ namespace Sekougi.MessagePack.Serializers
     {
         public override void Serialize(IMessagePackBuffer buffer, ulong value)
         {
-            throw new System.NotImplementedException();
+            MessagePackPrimitivesWriter.Write(value, buffer);
         }
 
         public override ulong Deserialize(Stream stream)
         {
-            throw new System.NotImplementedException();
+            return MessagePackPrimitivesReader.ReadUlong(stream);
         }
     }
 }

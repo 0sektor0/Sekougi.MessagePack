@@ -8,12 +8,12 @@ namespace Sekougi.MessagePack.Serializers
     {
         public override void Serialize(IMessagePackBuffer buffer, ushort value)
         {
-            throw new System.NotImplementedException();
+            MessagePackPrimitivesWriter.Write(value, buffer);
         }
 
         public override ushort Deserialize(Stream stream)
         {
-            throw new System.NotImplementedException();
+            return MessagePackPrimitivesReader.ReadUshort(stream);
         }
     }
 }

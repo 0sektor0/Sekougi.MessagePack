@@ -5,9 +5,10 @@ using System.IO;
 
 namespace Sekougi.MessagePack.Serializers
 {
+    // TODO: remove array code duplicate
     public class MessagePackSerializerList<T> : MessagePackSerializer<List<T>>
     {
-        private MessagePackSerializer<T> _elementSerializer;
+        private readonly MessagePackSerializer<T> _elementSerializer;
 
 
         public MessagePackSerializerList()
@@ -15,14 +16,26 @@ namespace Sekougi.MessagePack.Serializers
             _elementSerializer = MessagePackSerializersReposetory.Get<T>();
         }
         
-        public override void Serialize(IMessagePackBuffer buffer, List<T> value)
+        public override void Serialize(IMessagePackBuffer buffer, List<T> values)
         {
-            throw new System.NotImplementedException();
+            MessagePackPrimitivesWriter.WriteArrayHeader(values.Count, buffer);
+            foreach (var value in values)
+            {
+                _elementSerializer.Serialize(buffer, value);
+            }
         }
 
         public override List<T> Deserialize(Stream stream)
         {
-            throw new System.NotImplementedException();
+            var length = MessagePackPrimitivesReader.ReadArrayLength(stream);
+            var list = new List<T>(length);
+
+            for (var i = 0; i < length; i++)
+            {
+                list[i] = _elementSerializer.Deserialize(stream);
+            }
+
+            return list;
         }
     }
 }

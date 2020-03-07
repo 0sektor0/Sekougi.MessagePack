@@ -8,12 +8,12 @@ namespace Sekougi.MessagePack.Serializers
     {
         public override void Serialize(IMessagePackBuffer buffer, long value)
         {
-            throw new System.NotImplementedException();
+            MessagePackPrimitivesWriter.Write(value, buffer);
         }
 
         public override long Deserialize(Stream stream)
         {
-            throw new System.NotImplementedException();
+            return MessagePackPrimitivesReader.ReadLong(stream);
         }
     }
 }
