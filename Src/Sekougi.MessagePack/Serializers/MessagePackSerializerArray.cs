@@ -14,7 +14,7 @@ namespace Sekougi.MessagePack.Serializers
             _elementSerializer = MessagePackSerializersReposetory.Get<T>();
         }
 
-        public override void Serialize(IMessagePackBuffer buffer)
+        public override void Serialize(IMessagePackBuffer buffer, T[] value)
         {
             throw new System.NotImplementedException();
         }

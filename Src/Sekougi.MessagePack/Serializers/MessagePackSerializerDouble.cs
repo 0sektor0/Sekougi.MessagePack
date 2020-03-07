@@ -6,7 +6,7 @@ namespace Sekougi.MessagePack.Serializers
 {
     public class MessagePackSerializerDouble : MessagePackSerializer<double>
     {
-        public override void Serialize(IMessagePackBuffer buffer)
+        public override void Serialize(IMessagePackBuffer buffer, double value)
         {
             throw new System.NotImplementedException();
         }

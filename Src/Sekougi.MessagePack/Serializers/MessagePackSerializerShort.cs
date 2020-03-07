@@ -6,7 +6,7 @@ namespace Sekougi.MessagePack.Serializers
 {
     public class MessagePackSerializerShort : MessagePackSerializer<short>
     {
-        public override void Serialize(IMessagePackBuffer buffer)
+        public override void Serialize(IMessagePackBuffer buffer, short value)
         {
             throw new System.NotImplementedException();
         }

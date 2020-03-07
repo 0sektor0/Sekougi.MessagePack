@@ -6,7 +6,7 @@ namespace Sekougi.MessagePack.Serializers
 {
     public class MessagePackSerializerFloat : MessagePackSerializer<float>
     {
-        public override void Serialize(IMessagePackBuffer buffer)
+        public override void Serialize(IMessagePackBuffer buffer, float value)
         {
             throw new System.NotImplementedException();
         }

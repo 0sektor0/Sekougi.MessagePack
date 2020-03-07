@@ -6,7 +6,7 @@ namespace Sekougi.MessagePack.Serializers
 {
     public class MessagePackSerializerBinary : MessagePackSerializer<byte[]>
     {
-        public override void Serialize(IMessagePackBuffer buffer)
+        public override void Serialize(IMessagePackBuffer buffer, byte[] value)
         {
             throw new System.NotImplementedException();
         }

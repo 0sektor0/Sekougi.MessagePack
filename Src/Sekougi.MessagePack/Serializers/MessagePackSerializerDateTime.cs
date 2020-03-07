@@ -7,7 +7,7 @@ namespace Sekougi.MessagePack.Serializers
 {
     public class MessagePackSerializerDateTime : MessagePackSerializer<DateTime>
     {
-        public override void Serialize(IMessagePackBuffer buffer)
+        public override void Serialize(IMessagePackBuffer buffer, DateTime value)
         {
             throw new NotImplementedException();
         }

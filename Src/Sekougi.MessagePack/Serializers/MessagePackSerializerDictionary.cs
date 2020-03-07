@@ -17,7 +17,7 @@ namespace Sekougi.MessagePack.Serializers
             _valueSerializer = MessagePackSerializersReposetory.Get<TValue>();
         }
         
-        public override void Serialize(IMessagePackBuffer buffer)
+        public override void Serialize(IMessagePackBuffer buffer, Dictionary<TKey, TValue> value)
         {
             throw new System.NotImplementedException();
         }
