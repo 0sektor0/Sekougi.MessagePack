@@ -1,0 +1,25 @@
+﻿<Properties StartupConfiguration="{C236B089-D48B-4992-9CF6-455ABAD4F4DF}|Default">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Src/Sekougi.MessagePack/MessagePackBuffer.cs">
+    <Files>
+      <File FileName="Src/Sekougi.MessagePack/MessagePackBuffer.cs" Line="1" Column="1" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="Sekougi.MessagePack" expanded="True" selected="True">
+            <Node name="Sekougi.MessagePack" expanded="True" />
+            <Node name="Sekougi.MessagePack.ConsoleTest" expanded="True" />
+            <Node name="Sekougi.MessagePack.Tests" expanded="True" />
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.ItemProperties.Sekougi.MessagePack.ConsoleTest PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>

@@ -9,6 +9,16 @@ namespace Sekougi.MessagePack
     // buffer prototype
     public class MessagePackBuffer : MemoryStream, IMessagePackBuffer
     {
+        public MessagePackBuffer(int capacity) : base(capacity)
+        {
+            
+        }
+        
+        public MessagePackBuffer()
+        {
+            
+        }
+        
         public void Write(byte[] values)
         {
             Write(values, 0, values.Length);

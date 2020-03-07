@@ -1,6 +1,6 @@
 using System;
 
-namespace Sekougi.MessagePack
+namespace Sekougi.MessagePack.Exceptions
 {
     public class MessagePackException : Exception
     {

@@ -26,12 +26,13 @@ namespace Sekougi.MessagePack
         public const byte MAP16   = 0xde;
         public const byte MAP32   = 0xdf;
         
-        public const byte FIX_STR   = 0xa0;
-        public const byte FIX_MAP   = 0x80;
-        public const byte FIX_ARRAY = 0x90;
-        
         public const byte TIMESTAMP32 = 0xd6;
         public const byte TIMESTAMP64 = 0xd7;
         public const byte TIMESTAMP96 = 0xc7;
+        
+        public const byte FIX_INT    = 0b_1110_0000;
+        public const byte FIX_MAP    = 0b_1000_0000;
+        public const byte FIX_ARRAY  = 0b_1001_0000;
+        public const byte FIX_STRING = 0b_1010_0000;
     }
 }
