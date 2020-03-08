@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.IO;
 
 
 
@@ -16,23 +15,23 @@ namespace Sekougi.MessagePack.Serializers
             _elementSerializer = MessagePackSerializersReposetory.Get<T>();
         }
         
-        public override void Serialize(List<T> values, IMessagePackBuffer buffer)
+        public override void Serialize(List<T> values, MessagePackWriter writer)
         {
-            MessagePackPrimitivesWriter.WriteArrayHeader(values.Count, buffer);
+            writer.WriteArrayHeader(values.Count);
             foreach (var value in values)
             {
-                _elementSerializer.Serialize(value, buffer);
+                _elementSerializer.Serialize(value, writer);
             }
         }
 
-        public override List<T> Deserialize(Stream stream)
+        public override List<T> Deserialize(MessagePackReader reader)
         {
-            var length = MessagePackPrimitivesReader.ReadArrayLength(stream);
+            var length = reader.ReadArrayLength();
             var list = new List<T>(length);
 
             for (var i = 0; i < length; i++)
             {
-                list[i] = _elementSerializer.Deserialize(stream);
+                list[i] = _elementSerializer.Deserialize(reader);
             }
 
             return list;

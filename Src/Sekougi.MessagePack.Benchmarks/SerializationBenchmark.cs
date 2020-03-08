@@ -14,12 +14,14 @@ namespace Sekougi.MessagePack.Benchmarks
         private readonly Stream _cliStream;
         private readonly Packer _cliBuffer;
         private readonly MessagePackStreamBuffer _sekougiBuffer;
+        private readonly MessagePackWriter _sekougiWriter;
 
         public SerializationBenchmark()
         {
             _cliStream = new MemoryStream();
             _cliBuffer = Packer.Create(_cliStream);
             _sekougiBuffer = new MessagePackStreamBuffer();
+            _sekougiWriter = new MessagePackWriter(_sekougiBuffer);
         }
 
 
@@ -42,12 +44,12 @@ namespace Sekougi.MessagePack.Benchmarks
         [Arguments(100, int.MaxValue)]
         public void SerializeIntSekougi(int count, int value)
         {
-            _sekougiBuffer.Position = 0;
+            _sekougiBuffer.Drop();
             var serializer = MessagePackSerializersReposetory.Get<int>();
 
             for (var i = 0; i < count; i++)
             {
-                serializer.Serialize(value, _sekougiBuffer);
+                serializer.Serialize(value, _sekougiWriter);
             }
         }
     }

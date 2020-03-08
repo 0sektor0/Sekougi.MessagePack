@@ -6,14 +6,14 @@ namespace Sekougi.MessagePack.Serializers
 {
     public class MessagePackSerializerFloat : MessagePackSerializer<float>
     {
-        public override void Serialize(float value, IMessagePackBuffer buffer)
+        public override void Serialize(float value, MessagePackWriter writer)
         {
-            MessagePackPrimitivesWriter.Write(value, buffer);
+            writer.Write(value);
         }
 
-        public override float Deserialize(Stream stream)
+        public override float Deserialize(MessagePackReader reader)
         {
-            return MessagePackPrimitivesReader.ReadFloat(stream);
+            return reader.ReadFloat();
         }
     }
 }

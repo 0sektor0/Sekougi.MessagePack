@@ -1,17 +1,15 @@
-using System.IO;
-
 namespace Sekougi.MessagePack.Serializers
 {
     public class MessagePackSerializerBool : MessagePackSerializer<bool>
     {
-        public override void Serialize(bool value, IMessagePackBuffer buffer)
+        public override void Serialize(bool value, MessagePackWriter writer)
         {
-            MessagePackPrimitivesWriter.Write(value, buffer);
+            writer.Write(value);
         }
 
-        public override bool Deserialize(Stream stream)
+        public override bool Deserialize(MessagePackReader reader)
         {
-            return MessagePackPrimitivesReader.ReadBool(stream);
+            return reader.ReadBool();
         }
     }
 }

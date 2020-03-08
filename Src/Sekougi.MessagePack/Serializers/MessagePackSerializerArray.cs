@@ -1,7 +1,3 @@
-using System.IO;
-
-
-
 namespace Sekougi.MessagePack.Serializers
 {
     public class MessagePackSerializerArray<T> : MessagePackSerializer<T[]>
@@ -14,23 +10,23 @@ namespace Sekougi.MessagePack.Serializers
             _elementSerializer = MessagePackSerializersReposetory.Get<T>();
         }
 
-        public override void Serialize(T[] values, IMessagePackBuffer buffer)
+        public override void Serialize(T[] values, MessagePackWriter writer)
         {
-            MessagePackPrimitivesWriter.WriteArrayHeader(values.Length, buffer);
+            writer.WriteArrayHeader(values.Length);
             foreach (var value in values)
             {
-                _elementSerializer.Serialize(value, buffer);
+                _elementSerializer.Serialize(value, writer);
             }
         }
 
-        public override T[] Deserialize(Stream stream)
+        public override T[] Deserialize(MessagePackReader reader)
         {
-            var length = MessagePackPrimitivesReader.ReadArrayLength(stream);
+            var length = reader.ReadArrayLength();
             var array = new T[length];
 
             for (var i = 0; i < length; i++)
             {
-                array[i] = _elementSerializer.Deserialize(stream);
+                array[i] = _elementSerializer.Deserialize(reader);
             }
 
             return array;

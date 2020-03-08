@@ -1,6 +1,5 @@
 using System;
 using System.Buffers;
-using System.IO;
 using System.Text;
 using Sekougi.MessagePack.Exceptions;
 
@@ -8,7 +7,7 @@ using Sekougi.MessagePack.Exceptions;
 
 namespace Sekougi.MessagePack
 {
-    public static class MessagePackPrimitivesReader
+    public class MessagePackReader
     {
         // TODO: maybe i should move all offset sizes to constants
         private const byte MOVED_FIX_INT_CODE = MessagePackTypeCode.FIX_INT >> 5;
@@ -16,10 +15,17 @@ namespace Sekougi.MessagePack
         private const byte MOVED_FIX_ARRAY_CODE = MessagePackTypeCode.FIX_ARRAY >> 4;
         private const byte MOVED_FIX_MAP_CODE = MessagePackTypeCode.FIX_MAP >> 4;
 
-
-        public static bool ReadBool(Stream stream)
+        private readonly IMessagePackBuffer _messagePackBuffer;
+        
+        
+        public MessagePackReader(IMessagePackBuffer messagePackBuffer)
         {
-            var typeCode = (byte) stream.ReadByte();
+            _messagePackBuffer = messagePackBuffer;
+        }
+        
+        public bool ReadBool()
+        {
+            var typeCode = _messagePackBuffer.Read();
             switch (typeCode)
             {
                 case MessagePackTypeCode.FALSE:
@@ -33,9 +39,9 @@ namespace Sekougi.MessagePack
             }
         }
         
-        public static sbyte ReadSbyte(Stream stream)
+        public sbyte ReadSbyte()
         {
-            var longValue = ReadLong(stream);
+            var longValue = ReadLong();
             if (longValue > sbyte.MaxValue || longValue < sbyte.MinValue)
                 throw new InvalidCastException();
 
@@ -43,9 +49,9 @@ namespace Sekougi.MessagePack
             return value;
         }
 
-        public static byte ReadByte(Stream stream)
+        public byte ReadByte()
         {
-            var longValue = ReadUlong(stream);
+            var longValue = ReadUlong();
             if (longValue > byte.MaxValue)
                 throw new InvalidCastException();
 
@@ -53,9 +59,9 @@ namespace Sekougi.MessagePack
             return value;
         }
 
-        public static short ReadShort(Stream stream)
+        public short ReadShort()
         {
-            var longValue = ReadLong(stream);
+            var longValue = ReadLong();
             if (longValue > short.MaxValue || longValue < short.MinValue)
                 throw new InvalidCastException();
 
@@ -63,9 +69,9 @@ namespace Sekougi.MessagePack
             return value;
         }
 
-        public static ushort ReadUshort(Stream stream)
+        public ushort ReadUshort()
         {
-            var longValue = ReadUlong(stream);
+            var longValue = ReadUlong();
             if (longValue > ushort.MaxValue)
                 throw new InvalidCastException();
 
@@ -73,9 +79,9 @@ namespace Sekougi.MessagePack
             return value;
         }
 
-        public static int ReadInt(Stream stream)
+        public int ReadInt()
         {
-            var longValue = ReadLong(stream);
+            var longValue = ReadLong();
             if (longValue > int.MaxValue || longValue < int.MinValue)
                 throw new InvalidCastException();
 
@@ -83,9 +89,9 @@ namespace Sekougi.MessagePack
             return value;
         }
 
-        public static uint ReadUint(Stream stream)
+        public uint ReadUint()
         {
-            var longValue = ReadUlong(stream);
+            var longValue = ReadUlong();
             if (longValue > uint.MaxValue)
                 throw new InvalidCastException();
 
@@ -93,9 +99,9 @@ namespace Sekougi.MessagePack
             return value;
         }
 
-        public static long ReadLong(Stream stream)
+        public long ReadLong()
         {
-            var typeCode = (byte) stream.ReadByte();
+            var typeCode = _messagePackBuffer.Read();
 
             var isFixNum = typeCode >> 5 == MOVED_FIX_INT_CODE || typeCode >> 7 == 0;
             if (isFixNum)
@@ -104,25 +110,25 @@ namespace Sekougi.MessagePack
             switch (typeCode)
             {
                 case MessagePackTypeCode.INT8:
-                    return (sbyte) stream.ReadByte();
+                    return (sbyte) _messagePackBuffer.Read();
                 
                 case MessagePackTypeCode.INT16:
-                    return ReadBigEndianShort(stream);
+                    return ReadBigEndianShort();
 
                 case MessagePackTypeCode.INT32:
-                    return ReadBigEndianInt(stream);
+                    return ReadBigEndianInt();
 
                 case MessagePackTypeCode.INT64:
-                    return ReadBigEndianLong(stream);
+                    return ReadBigEndianLong();
 
                 default:
                     throw new InvalidCastException();
             }
         }
 
-        public static ulong ReadUlong(Stream stream)
+        public ulong ReadUlong()
         {
-            var typeCode = (byte) stream.ReadByte();
+            var typeCode = _messagePackBuffer.Read();
 
             var isFixNum = typeCode >> 7 == 0;
             if (isFixNum)
@@ -131,45 +137,45 @@ namespace Sekougi.MessagePack
             switch (typeCode)
             {
                 case MessagePackTypeCode.UINT8:
-                    return (byte) stream.ReadByte();
+                    return _messagePackBuffer.Read();
                 
                 case MessagePackTypeCode.UINT16:
-                    return ReadBigEndianUshort(stream);
+                    return ReadBigEndianUshort();
 
                 case MessagePackTypeCode.UINT32:
-                    return ReadBigEndianUint(stream);
+                    return ReadBigEndianUint();
 
                 case MessagePackTypeCode.UINT64:
-                    return ReadBigEndianUlong(stream);
+                    return ReadBigEndianUlong();
 
                 default:
                     throw new InvalidCastException();
             }
         }
 
-        public static float ReadFloat(Stream stream)
+        public float ReadFloat()
         {
-            var typeCode = stream.ReadByte();
+            var typeCode = _messagePackBuffer.Read();
             if (typeCode != MessagePackTypeCode.FLOAT32)
                 throw new InvalidCastException();
 
-            var value = ReadBigEndianFloat(stream);
+            var value = ReadBigEndianFloat();
             return value;
         }
 
-        public static double ReadDouble(Stream stream)
+        public double ReadDouble()
         {
-            var typeCode = stream.ReadByte();
+            var typeCode = _messagePackBuffer.Read();
             if (typeCode != MessagePackTypeCode.FLOAT64)
                 throw new InvalidCastException();
 
-            var value = ReadBigEndianDouble(stream);
+            var value = ReadBigEndianDouble();
             return value;
         }
 
-        public static string ReadString(Stream stream, Encoding encoding)
+        public string ReadString(Encoding encoding)
         {
-            var typeCode = (byte) stream.ReadByte();
+            var typeCode = _messagePackBuffer.Read();
             int bytesLength;
 
             var isFixStr = typeCode >> 5 == MOVED_FIX_STR_CODE;
@@ -181,15 +187,15 @@ namespace Sekougi.MessagePack
                     return null;
                 
                 case MessagePackTypeCode.STR8: 
-                    bytesLength = stream.ReadByte();
+                    bytesLength = _messagePackBuffer.Read();
                     break;
                 
                 case MessagePackTypeCode.STR16:
-                    bytesLength = ReadBigEndianUshort(stream);
+                    bytesLength = ReadBigEndianUshort();
                     break;
                 
                 case MessagePackTypeCode.STR32:
-                    var length = ReadBigEndianUint(stream);
+                    var length = ReadBigEndianUint();
                     if (length > int.MaxValue)
                         throw new MessagePackStringTooLongException("string too long");
                     bytesLength = (int) length;
@@ -199,11 +205,11 @@ namespace Sekougi.MessagePack
                     throw new InvalidCastException();
             }
 
-            var str = ReadStringInternal(stream, encoding, bytesLength);
+            var str = ReadStringInternal(encoding, bytesLength);
             return str;
         }
 
-        private static string ReadStringInternal(Stream stream, Encoding encoding, int bytesLength)
+        private string ReadStringInternal(Encoding encoding, int bytesLength)
         {
             if (bytesLength == 0)
             {
@@ -220,8 +226,7 @@ namespace Sekougi.MessagePack
             try
             {
                 var buffer = new Span<byte>(bytes, 0, bytesLength);
-                stream.Read(buffer);
-                
+                _messagePackBuffer.Read(buffer);
                 return encoding.GetString(buffer);
             }
             catch (Exception exception)
@@ -234,23 +239,23 @@ namespace Sekougi.MessagePack
             }
         }
 
-        public static byte[] ReadBinary(Stream stream)
+        public byte[] ReadBinary()
         {
-            var typeCode = (byte) stream.ReadByte();
+            var typeCode = _messagePackBuffer.Read();
             var length = 0;
             
             switch (typeCode)
             {
                 case MessagePackTypeCode.BIN8:
-                    length = stream.ReadByte();
+                    length = _messagePackBuffer.Read();
                     break;
                 
                 case MessagePackTypeCode.BIN16:
-                    length = ReadBigEndianUshort(stream);
+                    length = ReadBigEndianUshort();
                     break;
                     
                 case MessagePackTypeCode.BIN32:
-                    length = ReadBigEndianInt(stream);
+                    length = ReadBigEndianInt();
                     break;
                 
                 default:
@@ -258,46 +263,46 @@ namespace Sekougi.MessagePack
             }
 
             var binaryData = new byte[length];
-            stream.Read(binaryData);
+            _messagePackBuffer.Read(binaryData, 0, length);
 
             return binaryData;
         }
 
-        public static int ReadDictionaryLength(Stream stream)
+        public int ReadDictionaryLength()
         {
-            return ReadCollectionLength(stream, MessagePackTypeCode.FIX_MAP, MOVED_FIX_MAP_CODE,
+            return ReadCollectionLength(MessagePackTypeCode.FIX_MAP, MOVED_FIX_MAP_CODE,
                 MessagePackTypeCode.MAP16, MessagePackTypeCode.MAP32);
         }
 
-        public static int ReadArrayLength(Stream stream)
+        public int ReadArrayLength()
         {
-            return ReadCollectionLength(stream, MessagePackTypeCode.FIX_ARRAY, MOVED_FIX_ARRAY_CODE,
+            return ReadCollectionLength(MessagePackTypeCode.FIX_ARRAY, MOVED_FIX_ARRAY_CODE,
                 MessagePackTypeCode.ARRAY16, MessagePackTypeCode.ARRAY32);
         }
                 
-        public static DateTime ReadDateTime(Stream stream)
+        public DateTime ReadDateTime()
         {
-            var typeCode = (byte) stream.ReadByte();
+            var typeCode = _messagePackBuffer.Read();
             switch (typeCode)
             {
                 case MessagePackTypeCode.TIMESTAMP32:
-                    return ReadDatetime32(stream);
+                    return ReadDatetime32();
                 
                 case MessagePackTypeCode.TIMESTAMP64:
-                    return ReadDatetime64(stream);
+                    return ReadDatetime64();
                 
                 case MessagePackTypeCode.TIMESTAMP96:
-                    return ReadDatetime96(stream);
+                    return ReadDatetime96();
                 
                 default:
                     throw new InvalidCastException();
             }
         }
 
-        private static DateTime ReadDatetime32(Stream stream)
+        private DateTime ReadDatetime32()
         {
-            stream.ReadByte();
-            var seconds = ReadBigEndianUint(stream);
+            _messagePackBuffer.Read();
+            var seconds = ReadBigEndianUint();
             
             var unixTime = new DateTime(1970, 1, 1);
             var time = unixTime.AddSeconds(seconds);
@@ -305,10 +310,10 @@ namespace Sekougi.MessagePack
             return time;
         }
 
-        private static DateTime ReadDatetime64(Stream stream)
+        private DateTime ReadDatetime64()
         {
-            stream.ReadByte();
-            var timeData = ReadBigEndianUlong(stream);
+            _messagePackBuffer.Read();
+            var timeData = ReadBigEndianUlong();
 
             var seconds = (int) (0x3_FFFF_FFFF & timeData);
             var nanoSeconds = (int) (timeData >> 34);
@@ -321,12 +326,12 @@ namespace Sekougi.MessagePack
             return time;
         }
 
-        private static DateTime ReadDatetime96(Stream stream)
+        private DateTime ReadDatetime96()
         {
-            stream.ReadByte();
-            stream.ReadByte();
-            var nanoSeconds = ReadBigEndianUint(stream);
-            var seconds = ReadBigEndianUlong(stream);
+            _messagePackBuffer.Read();
+            _messagePackBuffer.Read();
+            var nanoSeconds = ReadBigEndianUint();
+            var seconds = ReadBigEndianUlong();
             var ticks = nanoSeconds / DateTimeConstants.NanosecondsPerTick;
             
             var unixTime = new DateTime(1970, 1, 1);
@@ -336,85 +341,85 @@ namespace Sekougi.MessagePack
             return time;
         }
         
-        private static int ReadCollectionLength(Stream stream, byte prefix, byte movedPrefix, byte code16, byte code32)
+        private int ReadCollectionLength(byte prefix, byte movedPrefix, byte code16, byte code32)
         {
-            var typeCode = (byte) stream.ReadByte();
+            var typeCode = _messagePackBuffer.Read();
             if (typeCode >> 4 == movedPrefix)
                 return typeCode - prefix;
 
             if (typeCode == code16)
-                return ReadBigEndianUshort(stream);
+                return ReadBigEndianUshort();
             
             if (typeCode == code32)
-                return ReadBigEndianInt(stream);
+                return ReadBigEndianInt();
 
             throw new InvalidCastException();
         }
         
-        private static ushort ReadBigEndianUshort(Stream stream)
+        private ushort ReadBigEndianUshort()
         {
-            var value = ReadBigEndianShort(stream);
+            var value = ReadBigEndianShort();
             return unchecked((ushort)value);
         }
 
-        private static uint ReadBigEndianUint(Stream stream)
+        private uint ReadBigEndianUint()
         {
-            var value = ReadBigEndianInt(stream);
+            var value = ReadBigEndianInt();
             return unchecked((uint)value);
         }
 
-        private static ulong ReadBigEndianUlong(Stream stream)
+        private ulong ReadBigEndianUlong()
         {
-            var value = ReadBigEndianLong(stream);
+            var value = ReadBigEndianLong();
             return unchecked((ulong)value);
         }
 
-        private static short ReadBigEndianShort(Stream stream)
+        private short ReadBigEndianShort()
         {
-            var bigEndian0 = (short) (stream.ReadByte() << 8);
-            var bigEndian1 = (short) stream.ReadByte();
+            var bigEndian0 = (short) (_messagePackBuffer.Read() << 8);
+            var bigEndian1 = (short) _messagePackBuffer.Read();
 
             var value = (short) (bigEndian0 | bigEndian1);
             return value;
         }
 
-        private static int ReadBigEndianInt(Stream stream)
+        private int ReadBigEndianInt()
         {
-            var bigEndian0 = stream.ReadByte() << 24;
-            var bigEndian1 = stream.ReadByte() << 16;
-            var bigEndian2 = stream.ReadByte() << 8;
-            var bigEndian3 = stream.ReadByte();
+            var bigEndian0 = _messagePackBuffer.Read() << 24;
+            var bigEndian1 = _messagePackBuffer.Read() << 16;
+            var bigEndian2 = _messagePackBuffer.Read() << 8;
+            var bigEndian3 = _messagePackBuffer.Read();
 
             var value = bigEndian0 | bigEndian1 | bigEndian2 | bigEndian3;
             return value;
         }
 
-        private static long ReadBigEndianLong(Stream stream)
+        private long ReadBigEndianLong()
         {
-            var bigEndian0 = (long) stream.ReadByte() << 56;
-            var bigEndian1 = (long) stream.ReadByte() << 48;
-            var bigEndian2 = (long) stream.ReadByte() << 40;
-            var bigEndian3 = (long) stream.ReadByte() << 32;
-            var bigEndian4 = (long) stream.ReadByte() << 24;
-            var bigEndian5 = (long) stream.ReadByte() << 16;
-            var bigEndian6 = (long) stream.ReadByte() << 8;
-            var bigEndian7 = (long) stream.ReadByte();
+            var bigEndian0 = (long) _messagePackBuffer.Read() << 56;
+            var bigEndian1 = (long) _messagePackBuffer.Read() << 48;
+            var bigEndian2 = (long) _messagePackBuffer.Read() << 40;
+            var bigEndian3 = (long) _messagePackBuffer.Read() << 32;
+            var bigEndian4 = (long) _messagePackBuffer.Read() << 24;
+            var bigEndian5 = (long) _messagePackBuffer.Read() << 16;
+            var bigEndian6 = (long) _messagePackBuffer.Read() << 8;
+            var bigEndian7 = (long) _messagePackBuffer.Read();
 
             var value = bigEndian0 | bigEndian1 | bigEndian2 | bigEndian3 | bigEndian4 | bigEndian5 | bigEndian6 | bigEndian7;
             return value;
         }
 
-        private static unsafe float ReadBigEndianFloat(Stream stream)
+        private unsafe float ReadBigEndianFloat()
         {
-            var intValue = ReadBigEndianInt(stream);
+            var intValue = ReadBigEndianInt();
             var floatValue = *(float*) &intValue;
 
             return floatValue;
         }
 
-        private static unsafe double ReadBigEndianDouble(Stream stream)
+        private unsafe double ReadBigEndianDouble()
         {
-            var longValue = ReadBigEndianLong(stream);
+            var longValue = ReadBigEndianLong();
             var doubleValue = *(double*) &longValue;
 
             return doubleValue;

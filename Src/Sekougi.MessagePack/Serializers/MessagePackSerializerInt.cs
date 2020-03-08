@@ -1,19 +1,15 @@
-using System.IO;
-
-
-
 namespace Sekougi.MessagePack.Serializers
 {
     public class MessagePackSerializerInt : MessagePackSerializer<int>
     {
-        public override void Serialize(int value, IMessagePackBuffer buffer)
+        public override void Serialize(int value, MessagePackWriter writer)
         {
-            MessagePackPrimitivesWriter.Write(value, buffer);
+            writer.Write(value);
         }
 
-        public override int Deserialize(Stream stream)
+        public override int Deserialize(MessagePackReader reader)
         {
-            return MessagePackPrimitivesReader.ReadInt(stream);
+            return reader.ReadInt();
         }
     }
 }

@@ -14,6 +14,8 @@ namespace Sekougi.MessagePack
         
         int Read(byte[] destination, int offset, int length);
         
+        int Read(Span<byte> destination);
+        
         byte Read();
         
         void Drop();

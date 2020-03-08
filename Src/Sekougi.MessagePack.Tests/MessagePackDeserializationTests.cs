@@ -105,7 +105,12 @@ namespace Sekougi.MessagePack.Tests
             buffer.Drop();
             Assert.Equal(null,serializer.Deserialize(buffer));
             Assert.Equal("", serializer.Deserialize(buffer));
-            Assert.Equal(shortStr, serializer.Deserialize(buffer));
+            
+            var str = serializer.Deserialize(buffer);
+            var count = str.Length;
+            var count2 = shortStr.Length;
+            Assert.Equal(shortStr, str);
+            
             Assert.Equal(str8, serializer.Deserialize(buffer));
             Assert.Equal(str16, serializer.Deserialize(buffer));
             Assert.Equal(str32, serializer.Deserialize(buffer));

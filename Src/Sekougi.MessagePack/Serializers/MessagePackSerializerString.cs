@@ -1,19 +1,19 @@
-using System.IO;
 using System.Text;
+
 
 
 namespace Sekougi.MessagePack.Serializers
 {
     public class MessagePackSerializerString : MessagePackSerializer<string>
     {
-        public override void Serialize(string value, IMessagePackBuffer buffer)
+        public override void Serialize(string value, MessagePackWriter writer)
         {
-            MessagePackPrimitivesWriter.Write(value, Encoding.UTF8, buffer);
+            writer.Write(value, Encoding.UTF8);
         }
 
-        public override string Deserialize(Stream stream)
+        public override string Deserialize(MessagePackReader reader)
         {
-            return MessagePackPrimitivesReader.ReadString(stream, Encoding.UTF8);
+            return reader.ReadString(Encoding.UTF8);
         }
     }
 }

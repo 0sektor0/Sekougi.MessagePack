@@ -1,19 +1,15 @@
-using System.IO;
-
-
-
 namespace Sekougi.MessagePack.Serializers
 {
     public class MessagePackSerializerDouble : MessagePackSerializer<double>
     {
-        public override void Serialize(double value, IMessagePackBuffer buffer)
+        public override void Serialize(double value, MessagePackWriter writer)
         {
-            MessagePackPrimitivesWriter.Write(value, buffer);
+            writer.Write(value);
         }
 
-        public override double Deserialize(Stream stream)
+        public override double Deserialize(MessagePackReader reader)
         {
-            return MessagePackPrimitivesReader.ReadDouble(stream);
+            return reader.ReadDouble();
         }
     }
 }
