@@ -6,7 +6,7 @@ namespace Sekougi.MessagePack.Serializers
 {
     public class MessagePackSerializerBinary : MessagePackSerializer<byte[]>
     {
-        public override void Serialize(IMessagePackBuffer buffer, byte[] value)
+        public override void Serialize(byte[] value, IMessagePackBuffer buffer)
         {
             MessagePackPrimitivesWriter.WriteBinary(value, buffer);
         }

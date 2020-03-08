@@ -7,7 +7,7 @@ namespace Sekougi.MessagePack.Serializers
 {
     public class MessagePackSerializerDateTime : MessagePackSerializer<DateTime>
     {
-        public override void Serialize(IMessagePackBuffer buffer, DateTime value)
+        public override void Serialize(DateTime value, IMessagePackBuffer buffer)
         {
             MessagePackPrimitivesWriter.Write(value, buffer);
         }

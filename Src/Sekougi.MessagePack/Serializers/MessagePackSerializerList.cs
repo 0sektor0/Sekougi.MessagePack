@@ -16,12 +16,12 @@ namespace Sekougi.MessagePack.Serializers
             _elementSerializer = MessagePackSerializersReposetory.Get<T>();
         }
         
-        public override void Serialize(IMessagePackBuffer buffer, List<T> values)
+        public override void Serialize(List<T> values, IMessagePackBuffer buffer)
         {
             MessagePackPrimitivesWriter.WriteArrayHeader(values.Count, buffer);
             foreach (var value in values)
             {
-                _elementSerializer.Serialize(buffer, value);
+                _elementSerializer.Serialize(value, buffer);
             }
         }
 

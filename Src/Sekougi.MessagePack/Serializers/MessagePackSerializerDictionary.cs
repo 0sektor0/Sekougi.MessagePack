@@ -17,13 +17,13 @@ namespace Sekougi.MessagePack.Serializers
             _valueSerializer = MessagePackSerializersReposetory.Get<TValue>();
         }
         
-        public override void Serialize(IMessagePackBuffer buffer, Dictionary<TKey, TValue> dictionary)
+        public override void Serialize(Dictionary<TKey, TValue> dictionary, IMessagePackBuffer buffer)
         {
             MessagePackPrimitivesWriter.WriteDictionaryHeader(dictionary.Count, buffer);
             foreach (var (key, value) in dictionary)
             {
-                _keySerializer.Serialize(buffer, key);
-                _valueSerializer.Serialize(buffer, value);
+                _keySerializer.Serialize(key, buffer);
+                _valueSerializer.Serialize(value, buffer);
             }
         }
 

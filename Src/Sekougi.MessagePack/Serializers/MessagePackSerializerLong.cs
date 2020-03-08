@@ -6,7 +6,7 @@ namespace Sekougi.MessagePack.Serializers
 {
     public class MessagePackSerializerLong : MessagePackSerializer<long>
     {
-        public override void Serialize(IMessagePackBuffer buffer, long value)
+        public override void Serialize(long value, IMessagePackBuffer buffer)
         {
             MessagePackPrimitivesWriter.Write(value, buffer);
         }

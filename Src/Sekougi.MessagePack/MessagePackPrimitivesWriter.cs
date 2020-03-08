@@ -10,7 +10,7 @@ namespace Sekougi.MessagePack
     {
         public static void WriteNull(IMessagePackBuffer buffer)
         {
-            buffer.WriteByte(MessagePackTypeCode.NIL);
+            buffer.Write(MessagePackTypeCode.NIL);
         }
 
         // TODO: find way to avoid allocations on string to byte[] cast
@@ -46,17 +46,17 @@ namespace Sekougi.MessagePack
         
         public static void Write(bool value, IMessagePackBuffer buffer)
         {
-            buffer.WriteByte(value ? MessagePackTypeCode.TRUE : MessagePackTypeCode.FALSE);
+            buffer.Write(value ? MessagePackTypeCode.TRUE : MessagePackTypeCode.FALSE);
         }
 
         public static void Write(byte value, IMessagePackBuffer buffer)
         {
             if (value > MessagePackRange.POSITIVE_FIX_INT_MAX)
             {
-                buffer.WriteByte(MessagePackTypeCode.UINT8);
+                buffer.Write(MessagePackTypeCode.UINT8);
             }
             
-            buffer.WriteByte(value);
+            buffer.Write(value);
         }
 
         public static void Write(sbyte value, IMessagePackBuffer buffer)
@@ -71,12 +71,12 @@ namespace Sekougi.MessagePack
             var isNegativeFixNum = value < 0 && value >= MessagePackRange.NEGATIVE_FIX_INT_MIN;
             if (isNegativeFixNum)
             {
-                buffer.WriteByte(byteValue);
+                buffer.Write(byteValue);
                 return;
             }
             
-            buffer.WriteByte(MessagePackTypeCode.INT8);
-            buffer.WriteByte(byteValue);
+            buffer.Write(MessagePackTypeCode.INT8);
+            buffer.Write(byteValue);
         }
         
         public static void Write(short value, IMessagePackBuffer buffer)
@@ -88,7 +88,7 @@ namespace Sekougi.MessagePack
                 return;
             }
             
-            buffer.WriteByte(MessagePackTypeCode.INT16);
+            buffer.Write(MessagePackTypeCode.INT16);
             WriteBigEndian(value, buffer);
         }
         
@@ -101,7 +101,7 @@ namespace Sekougi.MessagePack
                 return;
             }
             
-            buffer.WriteByte(MessagePackTypeCode.UINT16);
+            buffer.Write(MessagePackTypeCode.UINT16);
             WriteBigEndian(value, buffer);
         }
 
@@ -114,7 +114,7 @@ namespace Sekougi.MessagePack
                 return;
             }
 
-            buffer.WriteByte(MessagePackTypeCode.UINT32);
+            buffer.Write(MessagePackTypeCode.UINT32);
             WriteBigEndian(value, buffer);
         }
 
@@ -127,7 +127,7 @@ namespace Sekougi.MessagePack
                 return;
             }
             
-            buffer.WriteByte(MessagePackTypeCode.UINT64);
+            buffer.Write(MessagePackTypeCode.UINT64);
             WriteBigEndian(value, buffer);
         }
         
@@ -140,7 +140,7 @@ namespace Sekougi.MessagePack
                 return;
             }
             
-            buffer.WriteByte(MessagePackTypeCode.INT32);
+            buffer.Write(MessagePackTypeCode.INT32);
             WriteBigEndian(value, buffer);
         }
         
@@ -153,19 +153,19 @@ namespace Sekougi.MessagePack
                 return;
             }
             
-            buffer.WriteByte(MessagePackTypeCode.INT64);
+            buffer.Write(MessagePackTypeCode.INT64);
             WriteBigEndian(value, buffer);
         }
         
         public static void Write(float value, IMessagePackBuffer buffer)
         {
-            buffer.WriteByte(MessagePackTypeCode.FLOAT32);
+            buffer.Write(MessagePackTypeCode.FLOAT32);
             WriteBigEndian(value, buffer);
         }
         
         public static void Write(double value, IMessagePackBuffer buffer)
         {
-            buffer.WriteByte(MessagePackTypeCode.FLOAT64);
+            buffer.Write(MessagePackTypeCode.FLOAT64);
             WriteBigEndian(value, buffer);
         }
 
@@ -187,22 +187,22 @@ namespace Sekougi.MessagePack
                 if (nanoseconds == 0)
                 {
                     var data32 = (uint)data64;
-                    buffer.WriteByte(MessagePackTypeCode.TIMESTAMP32);
-                    buffer.WriteByte(unchecked((byte) MessagePackExtensionTypeCode.TIMESTAMP));
+                    buffer.Write(MessagePackTypeCode.TIMESTAMP32);
+                    buffer.Write(unchecked((byte) MessagePackExtensionTypeCode.TIMESTAMP));
                     WriteBigEndian(data32, buffer);
                 }
                 else
                 {
-                    buffer.WriteByte(MessagePackTypeCode.TIMESTAMP64);
-                    buffer.WriteByte(unchecked((byte) MessagePackExtensionTypeCode.TIMESTAMP));
+                    buffer.Write(MessagePackTypeCode.TIMESTAMP64);
+                    buffer.Write(unchecked((byte) MessagePackExtensionTypeCode.TIMESTAMP));
                     WriteBigEndian(data64, buffer);
                 }
             }
             else
             {
-                buffer.WriteByte(MessagePackTypeCode.TIMESTAMP96);
-                buffer.WriteByte(unchecked((byte) MessagePackExtensionTypeCode.TIMESTAMP96));
-                buffer.WriteByte(unchecked((byte) MessagePackExtensionTypeCode.TIMESTAMP));
+                buffer.Write(MessagePackTypeCode.TIMESTAMP96);
+                buffer.Write(unchecked((byte) MessagePackExtensionTypeCode.TIMESTAMP96));
+                buffer.Write(unchecked((byte) MessagePackExtensionTypeCode.TIMESTAMP));
                 WriteBigEndian((uint)nanoseconds, buffer);
                 WriteBigEndian(seconds, buffer);
             }
@@ -218,16 +218,16 @@ namespace Sekougi.MessagePack
             if (length < MessagePackRange.FIX_ARRAY_MAX_LEN)
             {
                 var code = prefix + length;
-                buffer.WriteByte((byte) code);
+                buffer.Write((byte) code);
             }
             else if (length < ushort.MaxValue)
             {
-                buffer.WriteByte(code16);
+                buffer.Write(code16);
                 WriteBigEndian((ushort) length, buffer);
             }
             else
             {
-                buffer.WriteByte(code32);
+                buffer.Write(code32);
                 WriteBigEndian(length, buffer);
             }
         }
@@ -249,22 +249,22 @@ namespace Sekougi.MessagePack
         private static void WriteFixString(byte[] stringBytes, IMessagePackBuffer buffer)
         {
             var prefix = MessagePackTypeCode.FIX_STRING + stringBytes.Length;
-            buffer.WriteByte((byte) prefix);
+            buffer.Write((byte) prefix);
             buffer.Write(stringBytes);
         }
         
         private static void WriteBinaryData8(byte typeCode, byte[] bytes, IMessagePackBuffer buffer)
         {
-            buffer.WriteByte(typeCode);
+            buffer.Write(typeCode);
             
             var byteSize = (byte) bytes.Length;
-            buffer.WriteByte(byteSize);
+            buffer.Write(byteSize);
             buffer.Write(bytes);
         }
         
         private static void WriteBinaryData16(byte typeCode, byte[] bytes, IMessagePackBuffer buffer)
         {
-            buffer.WriteByte(typeCode);
+            buffer.Write(typeCode);
             
             var byteSize = (ushort) bytes.Length;
             WriteBigEndian(byteSize, buffer);
@@ -273,7 +273,7 @@ namespace Sekougi.MessagePack
         
         private static void WriteBinaryData32(byte typeCode, byte[] bytes, IMessagePackBuffer buffer)
         {
-            buffer.WriteByte(typeCode);
+            buffer.Write(typeCode);
             
             var byteSize = bytes.Length;
             WriteBigEndian(byteSize, buffer);
@@ -302,24 +302,25 @@ namespace Sekougi.MessagePack
                 var bigEndian0 = (byte) value;
                 var bigEndian1 = (byte) (value >> 8);
                 
-                buffer.WriteByte(bigEndian1);
-                buffer.WriteByte(bigEndian0);
+                buffer.Write(bigEndian1);
+                buffer.Write(bigEndian0);
             }
         }
+        
+        // temporary optimization
+        // TODO: make writer non static
+        private static readonly byte[] _serializerBuffer = new byte[4];
         
         private static void WriteBigEndian(uint value, IMessagePackBuffer buffer)
         {
             unchecked
             {
-                var bigEndian0 = (byte) value;
-                var bigEndian1 = (byte) (value >> 8);
-                var bigEndian2 = (byte) (value >> 16);
-                var bigEndian3 = (byte) (value >> 24);
+                _serializerBuffer[3] = (byte) value;
+                _serializerBuffer[2] = (byte) (value >> 8);
+                _serializerBuffer[1] = (byte) (value >> 16);
+                _serializerBuffer[0] = (byte) (value >> 24);
                 
-                buffer.WriteByte(bigEndian3);
-                buffer.WriteByte(bigEndian2);
-                buffer.WriteByte(bigEndian1);
-                buffer.WriteByte(bigEndian0);
+                buffer.Write(_serializerBuffer);
             }
         }
 
@@ -336,14 +337,14 @@ namespace Sekougi.MessagePack
                 var bigEndian6 = (byte) (value >> 48);
                 var bigEndian7 = (byte) (value >> 56);
                 
-                buffer.WriteByte(bigEndian7);
-                buffer.WriteByte(bigEndian6);
-                buffer.WriteByte(bigEndian5);
-                buffer.WriteByte(bigEndian4);
-                buffer.WriteByte(bigEndian3);
-                buffer.WriteByte(bigEndian2);
-                buffer.WriteByte(bigEndian1);
-                buffer.WriteByte(bigEndian0);
+                buffer.Write(bigEndian7);
+                buffer.Write(bigEndian6);
+                buffer.Write(bigEndian5);
+                buffer.Write(bigEndian4);
+                buffer.Write(bigEndian3);
+                buffer.Write(bigEndian2);
+                buffer.Write(bigEndian1);
+                buffer.Write(bigEndian0);
             }
         }
     }

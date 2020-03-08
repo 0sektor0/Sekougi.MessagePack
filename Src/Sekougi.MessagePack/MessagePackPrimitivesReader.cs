@@ -15,7 +15,23 @@ namespace Sekougi.MessagePack
         private const byte MOVED_FIX_STR_CODE = MessagePackTypeCode.FIX_STRING >> 5;
         private const byte MOVED_FIX_ARRAY_CODE = MessagePackTypeCode.FIX_ARRAY >> 4;
         private const byte MOVED_FIX_MAP_CODE = MessagePackTypeCode.FIX_MAP >> 4;
-        
+
+
+        public static bool ReadBool(Stream stream)
+        {
+            var typeCode = (byte) stream.ReadByte();
+            switch (typeCode)
+            {
+                case MessagePackTypeCode.FALSE:
+                    return false;
+                
+                case MessagePackTypeCode.TRUE:
+                    return true;
+                
+                default:
+                    throw new InvalidCastException();
+            }
+        }
         
         public static sbyte ReadSbyte(Stream stream)
         {
