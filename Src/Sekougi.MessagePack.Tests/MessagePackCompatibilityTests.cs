@@ -7,7 +7,7 @@ using Xunit;
 
 namespace Sekougi.MessagePack.Tests
 {
-    public class MessagePackCompatibilityTest
+    public class MessagePackCompatibilityTests
     {
         [Fact]
         public void IntegerNumbersCompatibilityTest()
