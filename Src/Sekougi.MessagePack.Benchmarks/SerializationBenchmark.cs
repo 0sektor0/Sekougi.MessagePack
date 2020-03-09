@@ -11,17 +11,26 @@ namespace Sekougi.MessagePack.Benchmarks
     [MemoryDiagnoser]
     public class SerializationBenchmark
     {
-        private readonly Stream _cliStream;
-        private readonly Packer _cliBuffer;
-        private readonly MessagePackStreamBuffer _sekougiBuffer;
-        private readonly MessagePackWriter _sekougiWriter;
+        private readonly Packer _packerCli;
+        private readonly MsgPack.Serialization.MessagePackSerializer<int> _serializerIntCli;
+        private readonly MsgPack.Serialization.MessagePackSerializer<double> _serializerDoubleCli;
+        
+        private readonly MessagePackWriter _writerSekougi;
+        private readonly Serializers.MessagePackSerializer<int> _serializerIntSekougi;
+        private readonly Serializers.MessagePackSerializer<double> _serializerDoubleSekougi;
 
+        
         public SerializationBenchmark()
         {
-            _cliStream = new MemoryStream();
-            _cliBuffer = Packer.Create(_cliStream);
-            _sekougiBuffer = new MessagePackStreamBuffer();
-            _sekougiWriter = new MessagePackWriter(_sekougiBuffer);
+            var cliStream = new MemoryStream();
+            _packerCli = Packer.Create(cliStream);            
+            _serializerIntCli =  MessagePackSerializer.Get<int>();
+            _serializerDoubleCli = MessagePackSerializer.Get<double>();
+
+            var sekougiBuffer = new MessagePackStreamBuffer();
+            _writerSekougi = new MessagePackWriter(sekougiBuffer);
+            _serializerIntSekougi = MessagePackSerializersReposetory.Get<int>();
+            _serializerDoubleSekougi = MessagePackSerializersReposetory.Get<double>();
         }
 
 
@@ -30,12 +39,9 @@ namespace Sekougi.MessagePack.Benchmarks
         [Arguments(100, int.MaxValue)]
         public void SerializeIntCli(int count, int value)
         {
-            _cliStream.Position = 0;
-            var serializer = MessagePackSerializer.Get<int>();
-
             for (var i = 0; i < count; i++)
             {
-                serializer.PackTo(_cliBuffer, value);
+                _serializerIntCli.PackTo(_packerCli, value);
             }
         }
         
@@ -44,12 +50,31 @@ namespace Sekougi.MessagePack.Benchmarks
         [Arguments(100, int.MaxValue)]
         public void SerializeIntSekougi(int count, int value)
         {
-            _sekougiBuffer.Drop();
-            var serializer = MessagePackSerializersReposetory.Get<int>();
-
             for (var i = 0; i < count; i++)
             {
-                serializer.Serialize(value, _sekougiWriter);
+                _serializerIntSekougi.Serialize(value, _writerSekougi);
+            }
+        }
+        
+        [Benchmark]
+        [Arguments(1, double.MaxValue)]
+        [Arguments(100, double.MaxValue)]
+        public void SerializeDoubleCli(int count, double value)
+        {
+            for (var i = 0; i < count; i++)
+            {
+                _serializerDoubleCli.PackTo(_packerCli, value);
+            }
+        }
+        
+        [Benchmark]
+        [Arguments(1, double.MaxValue)]
+        [Arguments(100, double.MaxValue)]
+        public void SerializeDoubleSekougi(int count, double value)
+        {
+            for (var i = 0; i < count; i++)
+            {
+                _serializerDoubleSekougi.Serialize(value, _writerSekougi);
             }
         }
     }
