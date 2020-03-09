@@ -1,19 +1,15 @@
-using System.IO;
-
-
-
 namespace Sekougi.MessagePack.Serializers
 {
     public class MessagePackSerializerUlong : MessagePackSerializer<ulong>
     {
-        public override void Serialize(IMessagePackBuffer buffer, ulong value)
+        public override void Serialize(ulong value, MessagePackWriter writer)
         {
-            throw new System.NotImplementedException();
+            writer.Write(value);
         }
 
-        public override ulong Deserialize(Stream stream)
+        public override ulong Deserialize(MessagePackReader reader)
         {
-            throw new System.NotImplementedException();
+            return reader.ReadUlong();
         }
     }
 }

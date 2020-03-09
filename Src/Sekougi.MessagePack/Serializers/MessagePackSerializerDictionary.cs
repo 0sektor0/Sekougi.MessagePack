@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.IO;
 
 
 
@@ -7,8 +6,8 @@ namespace Sekougi.MessagePack.Serializers
 {
     public class MessagePackSerializerDictionary<TKey, TValue> : MessagePackSerializer<Dictionary<TKey, TValue>>
     {
-        private MessagePackSerializer<TKey> _keySerializer;
-        private MessagePackSerializer<TValue> _valueSerializer;
+        private readonly MessagePackSerializer<TKey> _keySerializer;
+        private readonly MessagePackSerializer<TValue> _valueSerializer;
         
         
         public MessagePackSerializerDictionary()
@@ -17,14 +16,30 @@ namespace Sekougi.MessagePack.Serializers
             _valueSerializer = MessagePackSerializersReposetory.Get<TValue>();
         }
         
-        public override void Serialize(IMessagePackBuffer buffer, Dictionary<TKey, TValue> value)
+        public override void Serialize(Dictionary<TKey, TValue> dictionary, MessagePackWriter writer)
         {
-            throw new System.NotImplementedException();
+            writer.WriteDictionaryHeader(dictionary.Count);
+            foreach (var (key, value) in dictionary)
+            {
+                _keySerializer.Serialize(key, writer);
+                _valueSerializer.Serialize(value, writer);
+            }
         }
 
-        public override Dictionary<TKey, TValue> Deserialize(Stream stream)
+        public override Dictionary<TKey, TValue> Deserialize(MessagePackReader reader)
         {
-            throw new System.NotImplementedException();
+            var dictionary = new Dictionary<TKey, TValue>();
+            var length = reader.ReadDictionaryLength();
+            
+            for (var i = 0; i < length; i++)
+            {
+                var key = _keySerializer.Deserialize(reader);
+                var value = _valueSerializer.Deserialize(reader);
+                
+                dictionary.Add(key, value);
+            }
+
+            return dictionary;
         }
     }
 }

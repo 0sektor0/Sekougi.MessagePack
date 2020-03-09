@@ -1,4 +1,4 @@
-using System.IO;
+using System.Text;
 
 
 
@@ -6,14 +6,14 @@ namespace Sekougi.MessagePack.Serializers
 {
     public class MessagePackSerializerString : MessagePackSerializer<string>
     {
-        public override void Serialize(IMessagePackBuffer buffer, string value)
+        public override void Serialize(string value, MessagePackWriter writer)
         {
-            throw new System.NotImplementedException();
+            writer.Write(value, Encoding.UTF8);
         }
 
-        public override string Deserialize(Stream stream)
+        public override string Deserialize(MessagePackReader reader)
         {
-            throw new System.NotImplementedException();
+            return reader.ReadString(Encoding.UTF8);
         }
     }
 }

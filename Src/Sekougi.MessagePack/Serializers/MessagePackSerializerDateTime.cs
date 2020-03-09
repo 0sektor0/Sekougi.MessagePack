@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 
 
 
@@ -7,14 +6,14 @@ namespace Sekougi.MessagePack.Serializers
 {
     public class MessagePackSerializerDateTime : MessagePackSerializer<DateTime>
     {
-        public override void Serialize(IMessagePackBuffer buffer, DateTime value)
+        public override void Serialize(DateTime value, MessagePackWriter writer)
         {
-            throw new NotImplementedException();
+            writer.Write(value);
         }
 
-        public override DateTime Deserialize(Stream stream)
+        public override DateTime Deserialize(MessagePackReader reader)
         {
-            throw new NotImplementedException();
+            return reader.ReadDateTime();
         }
     }
 }

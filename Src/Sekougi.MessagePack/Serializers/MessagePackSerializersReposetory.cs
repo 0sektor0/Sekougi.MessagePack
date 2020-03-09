@@ -8,19 +8,27 @@ namespace Sekougi.MessagePack.Serializers
     public static class MessagePackSerializersReposetory
     {
         private static readonly Dictionary<Type, object> _serializers = new Dictionary<Type, object>();
+        private static readonly object _lock = new Object();
 
 
         public static MessagePackSerializer<T> Get<T>()
         {
             var serializingType = typeof(T);
-            return Get(serializingType) as MessagePackSerializer<T>;
+            MessagePackSerializer<T> serializer;
+
+            lock (_lock)
+            {
+                serializer = Get(serializingType) as MessagePackSerializer<T>;
+            }
+
+            return serializer;
         }
 
         private static object Get(Type serializingType)
         {
             if (_serializers.ContainsKey(serializingType))
                 return _serializers[serializingType];
-            
+
             var serializer = Create(serializingType);
             _serializers.Add(serializingType, serializer);
 
@@ -29,6 +37,11 @@ namespace Sekougi.MessagePack.Serializers
 
         private static object Create(Type serializingType)
         {
+            if (serializingType == typeof(bool))
+            {
+                return new MessagePackSerializerBool();
+            }
+            
             if (serializingType == typeof(sbyte))
             {
                 return new MessagePackSerializerSbyte();

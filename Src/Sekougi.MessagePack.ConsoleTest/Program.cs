@@ -3,6 +3,7 @@ using Sekougi.MessagePack.Serializers;
 
 
 
+
 namespace Sekougi.MessagePack.ConsoleTest
 {
     class Program

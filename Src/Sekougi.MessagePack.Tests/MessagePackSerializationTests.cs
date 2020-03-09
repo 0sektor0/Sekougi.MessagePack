@@ -1,119 +1,126 @@
 using System;
-using System.Text;
+using Sekougi.MessagePack.Serializers;
 using Xunit;
 
 
 
 namespace Sekougi.MessagePack.Tests
 {
-    public class MessagePackPrimitivesWriterTest
+    public class MessagePackSerializationTests
     {
         [Fact]
         public void BoolTest()
         {
-            using var buffer = new MessagePackBuffer(2);
-            MessagePackPrimitivesWriter.Write(false, buffer);
-            MessagePackPrimitivesWriter.Write(true, buffer);
+            using var buffer = new MessagePackStreamBuffer(2);
+            var serializer = MessagePackSerializersReposetory.Get<bool>();
+            serializer.Serialize(false, buffer);
+            serializer.Serialize(true, buffer);
 
             var data = buffer.GetAll();
             Assert.Equal(2, data.Length);
-            Assert.Equal(MessagePackTypeCode.FALSE, data[0]);
-            Assert.Equal(MessagePackTypeCode.TRUE, data[1]);
+            Assert.Equal(0xc2, data[0]);
+            Assert.Equal(0xc3, data[1]);
         }
 
-        // values from -33 to 127 coverage
         [Fact]
         public void FixNumsTest()
         {
             var capacity = 39;
-            using var buffer = new MessagePackBuffer(capacity);
-                
-            MessagePackPrimitivesWriter.Write((byte)0, buffer);
-            MessagePackPrimitivesWriter.Write((sbyte)0, buffer);
-            MessagePackPrimitivesWriter.Write((short)0, buffer);
-            MessagePackPrimitivesWriter.Write((ushort)0, buffer);
-            MessagePackPrimitivesWriter.Write((int)0, buffer);
-            MessagePackPrimitivesWriter.Write((uint)0, buffer);
-            MessagePackPrimitivesWriter.Write((long)0, buffer);
-            MessagePackPrimitivesWriter.Write((ulong)0, buffer);
-                
-            MessagePackPrimitivesWriter.Write((byte)64, buffer);
-            MessagePackPrimitivesWriter.Write((sbyte)64, buffer);
-            MessagePackPrimitivesWriter.Write((short)64, buffer);
-            MessagePackPrimitivesWriter.Write((ushort)64, buffer);
-            MessagePackPrimitivesWriter.Write((int)64, buffer);
-            MessagePackPrimitivesWriter.Write((uint)64, buffer);
-            MessagePackPrimitivesWriter.Write((long)64, buffer);
-            MessagePackPrimitivesWriter.Write((ulong)64, buffer);
-                
-            MessagePackPrimitivesWriter.Write((byte)127, buffer);
-            MessagePackPrimitivesWriter.Write((sbyte)127, buffer);
-            MessagePackPrimitivesWriter.Write((short)127, buffer);
-            MessagePackPrimitivesWriter.Write((ushort)127, buffer);
-            MessagePackPrimitivesWriter.Write((int)127, buffer);
-            MessagePackPrimitivesWriter.Write((uint)127, buffer);
-            MessagePackPrimitivesWriter.Write((long)127, buffer);
-            MessagePackPrimitivesWriter.Write((ulong)127, buffer);
-                
-            MessagePackPrimitivesWriter.Write((sbyte)-1, buffer);
-            MessagePackPrimitivesWriter.Write((short)-1, buffer);
-            MessagePackPrimitivesWriter.Write((int)-1, buffer);
-            MessagePackPrimitivesWriter.Write((long)-1, buffer);
-                
-            MessagePackPrimitivesWriter.Write((sbyte)-16, buffer);
-            MessagePackPrimitivesWriter.Write((short)-16, buffer);
-            MessagePackPrimitivesWriter.Write((int)-16, buffer);
-            MessagePackPrimitivesWriter.Write((long)-16, buffer);
-                
-            MessagePackPrimitivesWriter.Write((sbyte)-32, buffer);
-            MessagePackPrimitivesWriter.Write((short)-32, buffer);
-            MessagePackPrimitivesWriter.Write((int)-32, buffer);
-            MessagePackPrimitivesWriter.Write((long)-32, buffer);
-                
-            // out of bounds
-            MessagePackPrimitivesWriter.Write((long) 1, buffer);
-            MessagePackPrimitivesWriter.Write((long) -33, buffer);
+            using var buffer = new MessagePackStreamBuffer(capacity);
 
-            var data = buffer.GetAll();
-            Assert.Equal(data.Length, capacity);
+            var byteSerializer = MessagePackSerializersReposetory.Get<byte>();
+            var sbyteSerializer = MessagePackSerializersReposetory.Get<sbyte>();
+            var shortSerializer = MessagePackSerializersReposetory.Get<short>();
+            var ushortSerializer = MessagePackSerializersReposetory.Get<ushort>();
+            var intSerializer = MessagePackSerializersReposetory.Get<int>();
+            var uintSerializer = MessagePackSerializersReposetory.Get<uint>();
+            var longSerializer = MessagePackSerializersReposetory.Get<long>();
+            var ulongSerializer = MessagePackSerializersReposetory.Get<ulong>();
+                
+            byteSerializer.Serialize(0, buffer);
+            sbyteSerializer.Serialize(0, buffer);
+            shortSerializer.Serialize(0, buffer);
+            ushortSerializer.Serialize(0, buffer);
+            intSerializer.Serialize(0, buffer);
+            uintSerializer.Serialize(0, buffer);
+            longSerializer.Serialize(0, buffer);
+            ulongSerializer.Serialize(0, buffer);
+            
+            byteSerializer.Serialize(64, buffer);
+            sbyteSerializer.Serialize(64, buffer);
+            shortSerializer.Serialize(64, buffer);
+            ushortSerializer.Serialize(64, buffer);
+            intSerializer.Serialize(64, buffer);
+            uintSerializer.Serialize(64, buffer);
+            longSerializer.Serialize(64, buffer);
+            ulongSerializer.Serialize(64, buffer);
+            
+            byteSerializer.Serialize(127, buffer);
+            sbyteSerializer.Serialize(127, buffer);
+            shortSerializer.Serialize(127, buffer);
+            ushortSerializer.Serialize(127, buffer);
+            intSerializer.Serialize(127, buffer);
+            uintSerializer.Serialize(127, buffer);
+            longSerializer.Serialize(127, buffer);
+            ulongSerializer.Serialize(127, buffer);
+            
+            sbyteSerializer.Serialize(-1, buffer);
+            shortSerializer.Serialize(-1, buffer);
+            intSerializer.Serialize(-1, buffer);
+            longSerializer.Serialize(-1, buffer);
+            
+            sbyteSerializer.Serialize(-16, buffer);
+            shortSerializer.Serialize(-16, buffer);
+            intSerializer.Serialize(-16, buffer);
+            longSerializer.Serialize(-16, buffer);
+            
+            sbyteSerializer.Serialize(-32, buffer);
+            shortSerializer.Serialize(-32, buffer);
+            intSerializer.Serialize(-32, buffer);
+            longSerializer.Serialize(-32, buffer);
+            
+            longSerializer.Serialize(1, buffer);
+            longSerializer.Serialize(-33, buffer);
 
-            var data0 = data.Slice(0, 8);
+            Assert.Equal(buffer.Length, capacity);
+
+            var data0 = buffer.GetPart(0, 8);
             foreach (var value in data0)
             {
                 Assert.Equal(value, 0x00);
             }
                 
-            var data64 = data.Slice(8, 8);
+            var data64 = buffer.GetPart(8, 8);
             foreach (var value in data64)
             {
                 Assert.Equal(value, 0x40);
             }
                 
-            var data127 = data.Slice(16, 8);
+            var data127 = buffer.GetPart(16, 8);
             foreach (var value in data127)
             {
                 Assert.Equal(value, 0x7f);
             }
                 
-            var dataNegative1 = data.Slice(24, 4);
+            var dataNegative1 = buffer.GetPart(24, 4);
             foreach (var value in dataNegative1)
             {
                 Assert.Equal(value, 0xff);
             }
                 
-            var dataNegative16 = data.Slice(28, 4);
+            var dataNegative16 = buffer.GetPart(28, 4);
             foreach (var value in dataNegative16)
             {
                 Assert.Equal(value, 0xf0);
             }
                 
-            var dataNegative32 = data.Slice(32, 4);
+            var dataNegative32 = buffer.GetPart(32, 4);
             foreach (var value in dataNegative32)
             {
                 Assert.Equal(value, 0xe0);
             }
 
-            var outOfBoundsValues = data.Slice(36, 3);
+            var outOfBoundsValues = buffer.GetPart(36, 3);
             Assert.Equal(outOfBoundsValues[0], 1);
             Assert.Equal(outOfBoundsValues[1], 208);
             Assert.Equal(outOfBoundsValues[2], 223);
@@ -123,13 +130,15 @@ namespace Sekougi.MessagePack.Tests
         public void SbyteBoundaryTest()
         {
             var capacity = 3;
-            using var buffer = new MessagePackBuffer(capacity);
+            using var buffer = new MessagePackStreamBuffer(capacity);
+            var sbyteSerializer = MessagePackSerializersReposetory.Get<sbyte>();
             
-            MessagePackPrimitivesWriter.Write(sbyte.MinValue, buffer);
-            MessagePackPrimitivesWriter.Write(sbyte.MaxValue, buffer);
+            sbyteSerializer.Serialize(sbyte.MinValue, buffer);
+            sbyteSerializer.Serialize(sbyte.MaxValue, buffer);
+            
+            Assert.Equal(buffer.Length, capacity);
             
             var data = buffer.GetAll();
-            Assert.Equal(data.Length, capacity);
             Assert.Equal(data[0], 208);
             Assert.Equal(data[1], 128);
             Assert.Equal(data[2], 127);
@@ -139,12 +148,13 @@ namespace Sekougi.MessagePack.Tests
         public void ByteBoundaryTest()
         {
             var capacity = 2;
-            using var buffer = new MessagePackBuffer(capacity);
+            using var buffer = new MessagePackStreamBuffer(capacity);
+            var serializer = MessagePackSerializersReposetory.Get<byte>();
             
-            MessagePackPrimitivesWriter.Write(byte.MaxValue, buffer);
+            serializer.Serialize(byte.MaxValue, buffer);
+            Assert.Equal(buffer.Length, capacity);
             
             var data = buffer.GetAll();
-            Assert.Equal(data.Length, capacity);
             Assert.Equal(data[0], 204);
             Assert.Equal(data[1], 255);
         }
@@ -153,20 +163,20 @@ namespace Sekougi.MessagePack.Tests
         public void ShortBoundaryTest()
         {
             var capacity = 6;
-            using var buffer = new MessagePackBuffer(capacity);
+            using var buffer = new MessagePackStreamBuffer(capacity);
+            var serializer = MessagePackSerializersReposetory.Get<short>();
             
-            MessagePackPrimitivesWriter.Write(short.MinValue, buffer);
-            MessagePackPrimitivesWriter.Write(short.MaxValue, buffer);
+            serializer.Serialize(short.MinValue, buffer);
+            serializer.Serialize(short.MaxValue, buffer);
             
-            var data = buffer.GetAll();
-            Assert.Equal(data.Length, capacity);
+            Assert.Equal(buffer.Length, capacity);
             
-            var firstValue = data.Slice(0, 3);
+            var firstValue = buffer.GetPart(0, 3);
             Assert.Equal(firstValue[0], 209);
             Assert.Equal(firstValue[1], 128);
             Assert.Equal(firstValue[2], 0);
             
-            var secondValue = data.Slice(3, 3);
+            var secondValue = buffer.GetPart(3, 3);
             Assert.Equal(secondValue[0], 209);
             Assert.Equal(secondValue[1], 127);
             Assert.Equal(secondValue[2], 255);
@@ -176,13 +186,13 @@ namespace Sekougi.MessagePack.Tests
         public void UshortBoundaryTest()
         {
             var capacity = 3;
-            using var buffer = new MessagePackBuffer(capacity);
+            using var buffer = new MessagePackStreamBuffer(capacity);
+            var serializer = MessagePackSerializersReposetory.Get<ushort>();
             
-            MessagePackPrimitivesWriter.Write(ushort.MaxValue, buffer);
+            serializer.Serialize(ushort.MaxValue, buffer);
+            Assert.Equal(buffer.Length, capacity);
             
             var data = buffer.GetAll();
-            Assert.Equal(data.Length, capacity);
-            
             Assert.Equal(data[0], 205);
             Assert.Equal(data[1], 255);
             Assert.Equal(data[2], 255);
@@ -192,22 +202,21 @@ namespace Sekougi.MessagePack.Tests
         public void IntBoundaryTest()
         {
             var capacity = 10;
-            using var buffer = new MessagePackBuffer(capacity);
+            using var buffer = new MessagePackStreamBuffer(capacity);
+            var serializer = MessagePackSerializersReposetory.Get<int>();
             
-            MessagePackPrimitivesWriter.Write(int.MinValue, buffer);
-            MessagePackPrimitivesWriter.Write(int.MaxValue, buffer);
+            serializer.Serialize(int.MinValue, buffer);
+            serializer.Serialize(int.MaxValue, buffer);
+            Assert.Equal(buffer.Length, capacity);
             
-            var data = buffer.GetAll();
-            Assert.Equal(data.Length, capacity);
-            
-            var firstValue = data.Slice(0, 5);
+            var firstValue = buffer.GetPart(0, 5);
             Assert.Equal(firstValue[0], 210);
             Assert.Equal(firstValue[1], 128);
             Assert.Equal(firstValue[2], 0);
             Assert.Equal(firstValue[3], 0);
             Assert.Equal(firstValue[4], 0);
             
-            var secondValue = data.Slice(5, 5);
+            var secondValue = buffer.GetPart(5, 5);
             Assert.Equal(secondValue[0], 210);
             Assert.Equal(secondValue[1], 127);
             Assert.Equal(secondValue[2], 255);
@@ -219,13 +228,13 @@ namespace Sekougi.MessagePack.Tests
         public void UintBoundaryTest()
         {
             var capacity = 5;
-            using var buffer = new MessagePackBuffer(capacity);
+            using var buffer = new MessagePackStreamBuffer(capacity);
+            var serializer = MessagePackSerializersReposetory.Get<uint>();
             
-            MessagePackPrimitivesWriter.Write(uint.MaxValue, buffer);
+            serializer.Serialize(uint.MaxValue, buffer);
+            Assert.Equal(buffer.Length, capacity);
             
             var data = buffer.GetAll();
-            Assert.Equal(data.Length, capacity);
-            
             Assert.Equal(data[0], 206);
             Assert.Equal(data[1], 255);
             Assert.Equal(data[2], 255);
@@ -237,15 +246,14 @@ namespace Sekougi.MessagePack.Tests
         public void LongBoundaryTest()
         {
             var capacity = 18;
-            using var buffer = new MessagePackBuffer(capacity);
+            using var buffer = new MessagePackStreamBuffer(capacity);
+            var serializer = MessagePackSerializersReposetory.Get<long>();
             
-            MessagePackPrimitivesWriter.Write(long.MaxValue, buffer);
-            MessagePackPrimitivesWriter.Write(long.MinValue, buffer);
+            serializer.Serialize(long.MaxValue, buffer);
+            serializer.Serialize(long.MinValue, buffer);
+            Assert.Equal(buffer.Length, capacity);
             
-            var data = buffer.GetAll();
-            Assert.Equal(data.Length, capacity);
-            
-            var firstValue = data.Slice(0, 9);
+            var firstValue = buffer.GetPart(0, 9);
             Assert.Equal(firstValue[0], 211);
             Assert.Equal(firstValue[1], 127);
             Assert.Equal(firstValue[2], 255);
@@ -256,7 +264,7 @@ namespace Sekougi.MessagePack.Tests
             Assert.Equal(firstValue[7], 255);
             Assert.Equal(firstValue[8], 255);
             
-            var secondValue = data.Slice(9, 9);
+            var secondValue = buffer.GetPart(9, 9);
             Assert.Equal(secondValue[0], 211);
             Assert.Equal(secondValue[1], 128);
             Assert.Equal(secondValue[2], 0);
@@ -272,13 +280,13 @@ namespace Sekougi.MessagePack.Tests
         public void UlongBoundaryTest()
         {
             var capacity = 9;
-            using var buffer = new MessagePackBuffer(capacity);
+            using var buffer = new MessagePackStreamBuffer(capacity);
+            var serializer = MessagePackSerializersReposetory.Get<ulong>();
             
-            MessagePackPrimitivesWriter.Write(ulong.MaxValue, buffer);
+            serializer.Serialize(ulong.MaxValue, buffer);
+            Assert.Equal(buffer.Length, capacity);
             
             var data = buffer.GetAll();
-            Assert.Equal(data.Length, capacity);
-            
             Assert.Equal(data[0], 207);
             Assert.Equal(data[1], 255);
             Assert.Equal(data[2], 255);
@@ -294,22 +302,21 @@ namespace Sekougi.MessagePack.Tests
         public void FloatBoundaryTest()
         {
             var capacity = 10;
-            using var buffer = new MessagePackBuffer(capacity);
+            using var buffer = new MessagePackStreamBuffer(capacity);
+            var serializer = MessagePackSerializersReposetory.Get<float>();
             
-            MessagePackPrimitivesWriter.Write(float.MaxValue, buffer);
-            MessagePackPrimitivesWriter.Write(float.MinValue, buffer);
+            serializer.Serialize(float.MaxValue, buffer);
+            serializer.Serialize(float.MinValue, buffer);
+            Assert.Equal(buffer.Length, capacity);
             
-            var data = buffer.GetAll();
-            Assert.Equal(data.Length, capacity);
-            
-            var firstValue = data.Slice(0, 5);
+            var firstValue = buffer.GetPart(0, 5);
             Assert.Equal(firstValue[0], 202);
             Assert.Equal(firstValue[1], 127);
             Assert.Equal(firstValue[2], 127);
             Assert.Equal(firstValue[3], 255);
             Assert.Equal(firstValue[4], 255);
             
-            var secondValue = data.Slice(5, 5);
+            var secondValue = buffer.GetPart(5, 5);
             Assert.Equal(secondValue[0], 202);
             Assert.Equal(secondValue[1], 255);
             Assert.Equal(secondValue[2], 127);
@@ -321,15 +328,14 @@ namespace Sekougi.MessagePack.Tests
         public void DoubleBoundaryTest()
         {
             var capacity = 18;
-            using var buffer = new MessagePackBuffer(capacity);
+            using var buffer = new MessagePackStreamBuffer(capacity);
+            var serializer = MessagePackSerializersReposetory.Get<double>();
             
-            MessagePackPrimitivesWriter.Write(double.MinValue, buffer);
-            MessagePackPrimitivesWriter.Write(double.MaxValue, buffer);
+            serializer.Serialize(double.MinValue, buffer);
+            serializer.Serialize(double.MaxValue, buffer);
+            Assert.Equal(buffer.Length, capacity);
             
-            var data = buffer.GetAll();
-            Assert.Equal(data.Length, capacity);
-            
-            var firstValue = data.Slice(0, 9);
+            var firstValue = buffer.GetPart(0, 9);
             Assert.Equal(firstValue[0], 203);
             Assert.Equal(firstValue[1], 255);
             Assert.Equal(firstValue[2], 239);
@@ -340,7 +346,7 @@ namespace Sekougi.MessagePack.Tests
             Assert.Equal(firstValue[7], 255);
             Assert.Equal(firstValue[8], 255);
             
-            var secondValue = data.Slice(9, 9);
+            var secondValue = buffer.GetPart(9, 9);
             Assert.Equal(secondValue[0], 203);
             Assert.Equal(secondValue[1], 127);
             Assert.Equal(secondValue[2], 239);
@@ -353,28 +359,16 @@ namespace Sekougi.MessagePack.Tests
         }
 
         [Fact]
-        public void NullTest()
-        {
-            var capacity = 1;
-            using var buffer = new MessagePackBuffer(capacity);
-            
-            MessagePackPrimitivesWriter.WriteNull(buffer);
-            
-            var data = buffer.GetAll();
-            Assert.Equal(data.Length, capacity);
-            Assert.Equal(data[0], 192);
-        }
-
-        [Fact]
         public void NullStringTest()
         {
             var capacity = 1;
-            using var buffer = new MessagePackBuffer(capacity);
+            using var buffer = new MessagePackStreamBuffer(capacity);
+            var serializer = MessagePackSerializersReposetory.Get<string>();
             
-            MessagePackPrimitivesWriter.Write(null, Encoding.UTF8, buffer);
+            serializer.Serialize(null, buffer);
+            Assert.Equal(buffer.Length, capacity);
             
             var data = buffer.GetAll();
-            Assert.Equal(data.Length, capacity);
             Assert.Equal(data[0], 192);
         }
 
@@ -382,12 +376,13 @@ namespace Sekougi.MessagePack.Tests
         public void SmallStringTest()
         {
             var capacity = 2;
-            using var buffer = new MessagePackBuffer(capacity);
+            using var buffer = new MessagePackStreamBuffer(capacity);
+            var serializer = MessagePackSerializersReposetory.Get<string>();
             
-            MessagePackPrimitivesWriter.Write("a", Encoding.UTF8, buffer);
+            serializer.Serialize("a", buffer);
+            Assert.Equal(buffer.Length, capacity);
             
             var data = buffer.GetAll();
-            Assert.Equal(data.Length, capacity);
             Assert.Equal(data[0], 161);
             Assert.Equal(data[1], 97);
         }
@@ -396,13 +391,14 @@ namespace Sekougi.MessagePack.Tests
         public void TimeStamp32Test()
         {
             var capacity = 6;
-            using var buffer = new MessagePackBuffer(6);
+            using var buffer = new MessagePackStreamBuffer(6);
+            var serializer = MessagePackSerializersReposetory.Get<DateTime>();
             
             var date = new DateTime(1970,1,1);
-            MessagePackPrimitivesWriter.Write(date, buffer);
+            serializer.Serialize(date, buffer);
+            Assert.Equal(buffer.Length, capacity);
             
             var data = buffer.GetAll();
-            Assert.Equal(data.Length, capacity);
             Assert.Equal(data[0], 214);
             Assert.Equal(data[1], 255);
             Assert.Equal(data[2], 0);
@@ -415,13 +411,14 @@ namespace Sekougi.MessagePack.Tests
         public void TimeStamp64Test()
         {
             var capacity = 10;
-            using var buffer = new MessagePackBuffer(6);
+            using var buffer = new MessagePackStreamBuffer(6);
+            var serializer = MessagePackSerializersReposetory.Get<DateTime>();
             
             var date = new DateTime(1970,1,1, 0, 0, 0, 1);
-            MessagePackPrimitivesWriter.Write(date, buffer);
+            serializer.Serialize(date, buffer);
+            Assert.Equal(buffer.Length, capacity);
             
             var data = buffer.GetAll();
-            Assert.Equal(data.Length, capacity);
             Assert.Equal(data[0], 215);
             Assert.Equal(data[1], 255);
             Assert.Equal(data[2], 0);
