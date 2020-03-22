@@ -11,36 +11,17 @@ namespace Sekougi.MessagePack
         public new int Length => (int) base.Length;
         
         
-        public MessagePackStreamBuffer(int capacity) : base(capacity)
-        {
-            
-        }
+        public MessagePackStreamBuffer(int capacity) : base(capacity) {}
         
-        public MessagePackStreamBuffer()
-        {
-            
-        }
+        public MessagePackStreamBuffer() {}
         
-        public void Write(byte[] values)
-        {
-            Write(values, 0, values.Length);
-        }
-
-        public void Write(byte value)
-        {
-            WriteByte(value);
-        }
-
-        public byte Read()
-        {
-            return (byte) base.ReadByte();
-        }
+        public void Write(byte[] values) => Write(values, 0, values.Length);
         
-        public void Drop()
-        {
-            Position = 0;
-        }
-
+        public void Write(byte value) => WriteByte(value);
+        
+        public byte Read() => (byte) base.ReadByte();
+        
+        public void Drop() => Position = 0;
 
         public Span<byte> GetPart(int start, int length)
         {
@@ -53,7 +34,7 @@ namespace Sekougi.MessagePack
         public Span<byte> GetAll()
         {
             var buffer = GetBuffer();
-            var span = new Span<byte>(buffer, 0, (int) Length);
+            var span = new Span<byte>(buffer, 0, Length);
             return span;
         }
     }

@@ -180,10 +180,21 @@ namespace Sekougi.MessagePack
             {
                 dateTime = dateTime.ToUniversalTime();
             }
+            
+            WriteTimeTicks(dateTime.Ticks);
+        }
 
-            var secondsSinceBclEpoch = dateTime.Ticks / TimeSpan.TicksPerSecond;
+        public void Write(TimeSpan timeSpan)
+        {
+            WriteTimeTicks(timeSpan.Ticks);
+        }
+
+        private void WriteTimeTicks(long ticks)
+        {
+
+            var secondsSinceBclEpoch = ticks / TimeSpan.TicksPerSecond;
             var seconds = secondsSinceBclEpoch - DateTimeConstants.BclSecondsAtUnixEpoch;
-            var nanoseconds = dateTime.Ticks % TimeSpan.TicksPerSecond * DateTimeConstants.NanosecondsPerTick;
+            var nanoseconds = ticks % TimeSpan.TicksPerSecond * DateTimeConstants.NanosecondsPerTick;
 
             if (seconds >> 34 == 0)
             {

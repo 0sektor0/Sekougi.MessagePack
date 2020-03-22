@@ -12,7 +12,7 @@ namespace Sekougi.MessagePack.Tests
         public void BoolTest()
         {
             using var buffer = new MessagePackStreamBuffer(2);
-            var serializer = MessagePackSerializersReposetory.Get<bool>();
+            var serializer = MessagePackSerializersRepository.Get<bool>();
             serializer.Serialize(false, buffer);
             serializer.Serialize(true, buffer);
 
@@ -28,14 +28,14 @@ namespace Sekougi.MessagePack.Tests
             var capacity = 39;
             using var buffer = new MessagePackStreamBuffer(capacity);
 
-            var byteSerializer = MessagePackSerializersReposetory.Get<byte>();
-            var sbyteSerializer = MessagePackSerializersReposetory.Get<sbyte>();
-            var shortSerializer = MessagePackSerializersReposetory.Get<short>();
-            var ushortSerializer = MessagePackSerializersReposetory.Get<ushort>();
-            var intSerializer = MessagePackSerializersReposetory.Get<int>();
-            var uintSerializer = MessagePackSerializersReposetory.Get<uint>();
-            var longSerializer = MessagePackSerializersReposetory.Get<long>();
-            var ulongSerializer = MessagePackSerializersReposetory.Get<ulong>();
+            var byteSerializer = MessagePackSerializersRepository.Get<byte>();
+            var sbyteSerializer = MessagePackSerializersRepository.Get<sbyte>();
+            var shortSerializer = MessagePackSerializersRepository.Get<short>();
+            var ushortSerializer = MessagePackSerializersRepository.Get<ushort>();
+            var intSerializer = MessagePackSerializersRepository.Get<int>();
+            var uintSerializer = MessagePackSerializersRepository.Get<uint>();
+            var longSerializer = MessagePackSerializersRepository.Get<long>();
+            var ulongSerializer = MessagePackSerializersRepository.Get<ulong>();
                 
             byteSerializer.Serialize(0, buffer);
             sbyteSerializer.Serialize(0, buffer);
@@ -131,7 +131,7 @@ namespace Sekougi.MessagePack.Tests
         {
             var capacity = 3;
             using var buffer = new MessagePackStreamBuffer(capacity);
-            var sbyteSerializer = MessagePackSerializersReposetory.Get<sbyte>();
+            var sbyteSerializer = MessagePackSerializersRepository.Get<sbyte>();
             
             sbyteSerializer.Serialize(sbyte.MinValue, buffer);
             sbyteSerializer.Serialize(sbyte.MaxValue, buffer);
@@ -149,7 +149,7 @@ namespace Sekougi.MessagePack.Tests
         {
             var capacity = 2;
             using var buffer = new MessagePackStreamBuffer(capacity);
-            var serializer = MessagePackSerializersReposetory.Get<byte>();
+            var serializer = MessagePackSerializersRepository.Get<byte>();
             
             serializer.Serialize(byte.MaxValue, buffer);
             Assert.Equal(buffer.Length, capacity);
@@ -164,7 +164,7 @@ namespace Sekougi.MessagePack.Tests
         {
             var capacity = 6;
             using var buffer = new MessagePackStreamBuffer(capacity);
-            var serializer = MessagePackSerializersReposetory.Get<short>();
+            var serializer = MessagePackSerializersRepository.Get<short>();
             
             serializer.Serialize(short.MinValue, buffer);
             serializer.Serialize(short.MaxValue, buffer);
@@ -187,7 +187,7 @@ namespace Sekougi.MessagePack.Tests
         {
             var capacity = 3;
             using var buffer = new MessagePackStreamBuffer(capacity);
-            var serializer = MessagePackSerializersReposetory.Get<ushort>();
+            var serializer = MessagePackSerializersRepository.Get<ushort>();
             
             serializer.Serialize(ushort.MaxValue, buffer);
             Assert.Equal(buffer.Length, capacity);
@@ -203,7 +203,7 @@ namespace Sekougi.MessagePack.Tests
         {
             var capacity = 10;
             using var buffer = new MessagePackStreamBuffer(capacity);
-            var serializer = MessagePackSerializersReposetory.Get<int>();
+            var serializer = MessagePackSerializersRepository.Get<int>();
             
             serializer.Serialize(int.MinValue, buffer);
             serializer.Serialize(int.MaxValue, buffer);
@@ -229,7 +229,7 @@ namespace Sekougi.MessagePack.Tests
         {
             var capacity = 5;
             using var buffer = new MessagePackStreamBuffer(capacity);
-            var serializer = MessagePackSerializersReposetory.Get<uint>();
+            var serializer = MessagePackSerializersRepository.Get<uint>();
             
             serializer.Serialize(uint.MaxValue, buffer);
             Assert.Equal(buffer.Length, capacity);
@@ -247,7 +247,7 @@ namespace Sekougi.MessagePack.Tests
         {
             var capacity = 18;
             using var buffer = new MessagePackStreamBuffer(capacity);
-            var serializer = MessagePackSerializersReposetory.Get<long>();
+            var serializer = MessagePackSerializersRepository.Get<long>();
             
             serializer.Serialize(long.MaxValue, buffer);
             serializer.Serialize(long.MinValue, buffer);
@@ -281,7 +281,7 @@ namespace Sekougi.MessagePack.Tests
         {
             var capacity = 9;
             using var buffer = new MessagePackStreamBuffer(capacity);
-            var serializer = MessagePackSerializersReposetory.Get<ulong>();
+            var serializer = MessagePackSerializersRepository.Get<ulong>();
             
             serializer.Serialize(ulong.MaxValue, buffer);
             Assert.Equal(buffer.Length, capacity);
@@ -303,7 +303,7 @@ namespace Sekougi.MessagePack.Tests
         {
             var capacity = 10;
             using var buffer = new MessagePackStreamBuffer(capacity);
-            var serializer = MessagePackSerializersReposetory.Get<float>();
+            var serializer = MessagePackSerializersRepository.Get<float>();
             
             serializer.Serialize(float.MaxValue, buffer);
             serializer.Serialize(float.MinValue, buffer);
@@ -329,7 +329,7 @@ namespace Sekougi.MessagePack.Tests
         {
             var capacity = 18;
             using var buffer = new MessagePackStreamBuffer(capacity);
-            var serializer = MessagePackSerializersReposetory.Get<double>();
+            var serializer = MessagePackSerializersRepository.Get<double>();
             
             serializer.Serialize(double.MinValue, buffer);
             serializer.Serialize(double.MaxValue, buffer);
@@ -363,7 +363,7 @@ namespace Sekougi.MessagePack.Tests
         {
             var capacity = 1;
             using var buffer = new MessagePackStreamBuffer(capacity);
-            var serializer = MessagePackSerializersReposetory.Get<string>();
+            var serializer = MessagePackSerializersRepository.Get<string>();
             
             serializer.Serialize(null, buffer);
             Assert.Equal(buffer.Length, capacity);
@@ -377,7 +377,7 @@ namespace Sekougi.MessagePack.Tests
         {
             var capacity = 2;
             using var buffer = new MessagePackStreamBuffer(capacity);
-            var serializer = MessagePackSerializersReposetory.Get<string>();
+            var serializer = MessagePackSerializersRepository.Get<string>();
             
             serializer.Serialize("a", buffer);
             Assert.Equal(buffer.Length, capacity);
@@ -392,7 +392,7 @@ namespace Sekougi.MessagePack.Tests
         {
             var capacity = 6;
             using var buffer = new MessagePackStreamBuffer(6);
-            var serializer = MessagePackSerializersReposetory.Get<DateTime>();
+            var serializer = MessagePackSerializersRepository.Get<DateTime>();
             
             var date = new DateTime(1970,1,1);
             serializer.Serialize(date, buffer);
@@ -412,7 +412,7 @@ namespace Sekougi.MessagePack.Tests
         {
             var capacity = 10;
             using var buffer = new MessagePackStreamBuffer(6);
-            var serializer = MessagePackSerializersReposetory.Get<DateTime>();
+            var serializer = MessagePackSerializersRepository.Get<DateTime>();
             
             var date = new DateTime(1970,1,1, 0, 0, 0, 1);
             serializer.Serialize(date, buffer);

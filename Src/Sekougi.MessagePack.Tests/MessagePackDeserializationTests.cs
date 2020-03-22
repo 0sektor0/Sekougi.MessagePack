@@ -13,10 +13,10 @@ namespace Sekougi.MessagePack.Tests
         {
             using var buffer = new MessagePackStreamBuffer();
 
-            var intSerializer = MessagePackSerializersReposetory.Get<int>();
-            var sbyteSerializer = MessagePackSerializersReposetory.Get<sbyte>();
-            var shortSerializer = MessagePackSerializersReposetory.Get<short>();
-            var longSerializer = MessagePackSerializersReposetory.Get<long>();
+            var intSerializer = MessagePackSerializersRepository.Get<int>();
+            var sbyteSerializer = MessagePackSerializersRepository.Get<sbyte>();
+            var shortSerializer = MessagePackSerializersRepository.Get<short>();
+            var longSerializer = MessagePackSerializersRepository.Get<long>();
             
             intSerializer.Serialize(-1, buffer);
             intSerializer.Serialize(1, buffer);
@@ -47,10 +47,10 @@ namespace Sekougi.MessagePack.Tests
         {
             using var buffer = new MessagePackStreamBuffer();
             
-            var uintSerializer = MessagePackSerializersReposetory.Get<uint>();
-            var byteSerializer = MessagePackSerializersReposetory.Get<byte>();
-            var ushortSerializer = MessagePackSerializersReposetory.Get<ushort>();
-            var ulongSerializer = MessagePackSerializersReposetory.Get<ulong>();
+            var uintSerializer = MessagePackSerializersRepository.Get<uint>();
+            var byteSerializer = MessagePackSerializersRepository.Get<byte>();
+            var ushortSerializer = MessagePackSerializersRepository.Get<ushort>();
+            var ulongSerializer = MessagePackSerializersRepository.Get<ulong>();
             
             byteSerializer.Serialize(byte.MaxValue, buffer);
             ushortSerializer.Serialize(ushort.MaxValue, buffer);
@@ -69,8 +69,8 @@ namespace Sekougi.MessagePack.Tests
         {
             using var buffer = new MessagePackStreamBuffer();
             
-            var floatSerializer = MessagePackSerializersReposetory.Get<float>();
-            var doubleSerializer = MessagePackSerializersReposetory.Get<double>();
+            var floatSerializer = MessagePackSerializersRepository.Get<float>();
+            var doubleSerializer = MessagePackSerializersRepository.Get<double>();
             
             floatSerializer.Serialize(float.MaxValue, buffer);
             floatSerializer.Serialize(float.MinValue, buffer);
@@ -93,7 +93,7 @@ namespace Sekougi.MessagePack.Tests
             var str32 = new string(new char[ushort.MaxValue + 10]);
             
             using var buffer = new MessagePackStreamBuffer();
-            var serializer = MessagePackSerializersReposetory.Get<string>();
+            var serializer = MessagePackSerializersRepository.Get<string>();
             
             serializer.Serialize(null, buffer);
             serializer.Serialize("", buffer);
@@ -123,7 +123,7 @@ namespace Sekougi.MessagePack.Tests
             var dateTime = new DateTime(2020, 1, 1, 1, 1, 1, 1);
             
             using var buffer = new MessagePackStreamBuffer();
-            var serializer = MessagePackSerializersReposetory.Get<DateTime>();
+            var serializer = MessagePackSerializersRepository.Get<DateTime>();
             
             serializer.Serialize(dateTimeZero, buffer);
             serializer.Serialize(dateTime, buffer);
@@ -141,7 +141,7 @@ namespace Sekougi.MessagePack.Tests
             var binaryData32= new byte[ushort.MaxValue + 1];
             
             using var buffer = new MessagePackStreamBuffer();
-            var serializer = MessagePackSerializersReposetory.Get<byte[]>();
+            var serializer = MessagePackSerializersRepository.Get<byte[]>();
             
             serializer.Serialize(binaryData8, buffer);
             serializer.Serialize(binaryData16, buffer);
@@ -162,7 +162,7 @@ namespace Sekougi.MessagePack.Tests
             var array32 = new string[ushort.MaxValue + 1];
             
             using var buffer = new MessagePackStreamBuffer();
-            var serializer = MessagePackSerializersReposetory.Get<string[]>();
+            var serializer = MessagePackSerializersRepository.Get<string[]>();
             
             serializer.Serialize(arrayEmpty, buffer);
             serializer.Serialize(array1, buffer);

@@ -12,7 +12,7 @@ namespace Sekougi.MessagePack.Serializers
 
         public MessagePackSerializerList()
         {
-            _elementSerializer = MessagePackSerializersReposetory.Get<T>();
+            _elementSerializer = MessagePackSerializersRepository.Get<T>();
         }
         
         public override void Serialize(List<T> values, MessagePackWriter writer)
