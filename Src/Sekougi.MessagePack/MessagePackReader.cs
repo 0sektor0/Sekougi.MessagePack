@@ -282,63 +282,70 @@ namespace Sekougi.MessagePack
                 
         public DateTime ReadDateTime()
         {
+            var timeSpan = ReadTimeSpan();
+            var unixTime = new DateTime(1970, 1, 1);
+            var time = unixTime.Add(timeSpan);
+            
+            return time;
+        }
+
+        public TimeSpan ReadTimeSpan()
+        {
             var typeCode = _messagePackBuffer.Read();
             switch (typeCode)
             {
                 case MessagePackTypeCode.TIMESTAMP32:
-                    return ReadDatetime32();
+                    return ReadTimeSpan32();
                 
                 case MessagePackTypeCode.TIMESTAMP64:
-                    return ReadDatetime64();
+                    return ReadTimeSpan64();
                 
                 case MessagePackTypeCode.TIMESTAMP96:
-                    return ReadDatetime96();
+                    return ReadTimeSpan96();
                 
                 default:
                     throw new InvalidCastException();
             }
         }
 
-        private DateTime ReadDatetime32()
+        private TimeSpan ReadTimeSpan32()
         {
             _messagePackBuffer.Read();
-            var seconds = ReadBigEndianUint();
             
-            var unixTime = new DateTime(1970, 1, 1);
-            var time = unixTime.AddSeconds(seconds);
-
-            return time;
+            var ticks = ReadBigEndianUint() * TimeSpan.TicksPerSecond;
+            var timeSpan = TimeSpan.FromTicks(ticks);
+            
+            return timeSpan;
         }
 
-        private DateTime ReadDatetime64()
+        private TimeSpan ReadTimeSpan64()
         {
             _messagePackBuffer.Read();
+            
             var timeData = ReadBigEndianUlong();
-
             var seconds = (int) (0x3_FFFF_FFFF & timeData);
             var nanoSeconds = (int) (timeData >> 34);
-            var ticks = nanoSeconds / DateTimeConstants.NanosecondsPerTick;
             
-            var unixTime = new DateTime(1970, 1, 1);
-            var time = unixTime.AddSeconds(seconds);
-            time = time.AddTicks(ticks);
-
-            return time;
+            var ticks = nanoSeconds / DateTimeConstants.NanosecondsPerTick + seconds * TimeSpan.TicksPerSecond;
+            var timeSpan = TimeSpan.FromTicks(ticks);
+            
+            return timeSpan;
         }
 
-        private DateTime ReadDatetime96()
+        private TimeSpan ReadTimeSpan96()
         {
             _messagePackBuffer.Read();
             _messagePackBuffer.Read();
+            
             var nanoSeconds = ReadBigEndianUint();
             var seconds = ReadBigEndianUlong();
-            var ticks = nanoSeconds / DateTimeConstants.NanosecondsPerTick;
-            
-            var unixTime = new DateTime(1970, 1, 1);
-            var time = unixTime.AddSeconds(seconds);
-            time = time.AddTicks(ticks);
 
-            return time;
+            var ticks = nanoSeconds / DateTimeConstants.NanosecondsPerTick;
+            var fromTicks = TimeSpan.FromTicks(ticks);
+            var fromSeconds = TimeSpan.FromSeconds(seconds);
+            var timeSpan = fromSeconds.Add(fromTicks);
+            
+            return timeSpan;
         }
         
         private int ReadCollectionLength(byte prefix, byte movedPrefix, byte code16, byte code32)

@@ -12,8 +12,8 @@ namespace Sekougi.MessagePack.Serializers
         
         public MessagePackSerializerDictionary()
         {
-            _keySerializer = MessagePackSerializersReposetory.Get<TKey>();
-            _valueSerializer = MessagePackSerializersReposetory.Get<TValue>();
+            _keySerializer = MessagePackSerializersRepository.Get<TKey>();
+            _valueSerializer = MessagePackSerializersRepository.Get<TValue>();
         }
         
         public override void Serialize(Dictionary<TKey, TValue> dictionary, MessagePackWriter writer)

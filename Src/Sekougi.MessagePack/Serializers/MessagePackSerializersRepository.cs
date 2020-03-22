@@ -5,10 +5,29 @@ using System.Collections.Generic;
 
 namespace Sekougi.MessagePack.Serializers
 {
-    public static class MessagePackSerializersReposetory
+    public static class MessagePackSerializersRepository
     {
         private static readonly Dictionary<Type, object> _serializers = new Dictionary<Type, object>();
         private static readonly object _lock = new Object();
+
+        private static readonly Dictionary<Type, Type> _serializersByTypes = new Dictionary<Type, Type>
+            {
+                {typeof(bool), typeof(MessagePackSerializerBool)},
+                {typeof(sbyte), typeof(MessagePackSerializerSbyte)},
+                {typeof(byte), typeof(MessagePackSerializerByte)},
+                {typeof(ushort), typeof(MessagePackSerializerUshort)},
+                {typeof(short), typeof(MessagePackSerializerShort)},
+                {typeof(uint), typeof(MessagePackSerializerUint)},
+                {typeof(int), typeof(MessagePackSerializerInt)},
+                {typeof(ulong), typeof(MessagePackSerializerUlong)},
+                {typeof(long), typeof(MessagePackSerializerLong)},
+                {typeof(float), typeof(MessagePackSerializerFloat)},
+                {typeof(double), typeof(MessagePackSerializerDouble)},
+                {typeof(DateTime), typeof(MessagePackSerializerDateTime)},
+                {typeof(string), typeof(MessagePackSerializerString)},
+                {typeof(byte[]), typeof(MessagePackSerializerBinary)},
+                {typeof(TimeSpan), typeof(MessagePackSerializerTimeSpan)},
+            };
 
 
         public static MessagePackSerializer<T> Get<T>()
@@ -34,77 +53,12 @@ namespace Sekougi.MessagePack.Serializers
 
             return serializer;
         }
-
+        
         private static object Create(Type serializingType)
         {
-            if (serializingType == typeof(bool))
+            if (_serializersByTypes.TryGetValue(serializingType, out var serializerType))
             {
-                return new MessagePackSerializerBool();
-            }
-            
-            if (serializingType == typeof(sbyte))
-            {
-                return new MessagePackSerializerSbyte();
-            }
-            
-            if (serializingType == typeof(byte))
-            {
-                return new MessagePackSerializerByte();
-            }
-            
-            if (serializingType == typeof(ushort))
-            {
-                return new MessagePackSerializerUshort();
-            }
-            
-            if (serializingType == typeof(short))
-            {
-                return new MessagePackSerializerShort();
-            }
-            
-            if (serializingType == typeof(uint))
-            {
-                return new MessagePackSerializerUint();
-            }
-            
-            if (serializingType == typeof(int))
-            {
-                return new MessagePackSerializerInt();
-            }
-            
-            if (serializingType == typeof(ulong))
-            {
-                return new MessagePackSerializerUlong();
-            }
-            
-            if (serializingType == typeof(long))
-            {
-                return new MessagePackSerializerLong();
-            }
-            
-            if (serializingType == typeof(float))
-            {
-                return new MessagePackSerializerFloat();
-            }
-            
-            if (serializingType == typeof(double))
-            {
-                return new MessagePackSerializerDouble();
-            }
-            
-            if (serializingType == typeof(DateTime))
-            {
-                return new MessagePackSerializerDateTime();
-            }
-            
-            if (serializingType == typeof(string))
-            {
-                return new MessagePackSerializerString();
-            }
-            
-            if (serializingType == typeof(byte[]))
-            {
-                return new MessagePackSerializerBinary();
+                return Activator.CreateInstance(serializerType);
             }
 
             if (IsTypeDictionary(serializingType))

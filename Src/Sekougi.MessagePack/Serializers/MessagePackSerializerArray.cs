@@ -7,7 +7,7 @@ namespace Sekougi.MessagePack.Serializers
 
         public MessagePackSerializerArray()
         {
-            _elementSerializer = MessagePackSerializersReposetory.Get<T>();
+            _elementSerializer = MessagePackSerializersRepository.Get<T>();
         }
 
         public override void Serialize(T[] values, MessagePackWriter writer)

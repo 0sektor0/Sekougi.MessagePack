@@ -42,10 +42,10 @@ namespace Sekougi.MessagePack.Benchmarks
             _serializerFloatCli = MessagePackSerializer.Get<float>();
             _serializerStringCli = MessagePackSerializer.Get<string>();
             
-            _serializerIntSekougi = MessagePackSerializersReposetory.Get<int>();
-            _serializerDoubleSekougi = MessagePackSerializersReposetory.Get<double>();
-            _serializerFloatSekougi = MessagePackSerializersReposetory.Get<float>();
-            _serializerStringSekougi = MessagePackSerializersReposetory.Get<string>();
+            _serializerIntSekougi = MessagePackSerializersRepository.Get<int>();
+            _serializerDoubleSekougi = MessagePackSerializersRepository.Get<double>();
+            _serializerFloatSekougi = MessagePackSerializersRepository.Get<float>();
+            _serializerStringSekougi = MessagePackSerializersRepository.Get<string>();
         }
         
         [IterationSetup]
