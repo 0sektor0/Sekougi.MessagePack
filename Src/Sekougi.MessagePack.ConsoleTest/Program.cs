@@ -1,8 +1,4 @@
-﻿using System;
-
-
-
-namespace Sekougi.MessagePack.ConsoleTest
+﻿namespace Sekougi.MessagePack.ConsoleTest
 {
     class Program
     {

@@ -1,11 +1,15 @@
 using System;
-
+using System.IO;
 
 
 namespace Sekougi.MessagePack
 {
     public interface IMessagePackBuffer : IDisposable
     {
+        int Length { get; }
+
+        bool CanSeek { get; }
+
         void Write(byte value);
         
         void Write(byte[] values);
@@ -23,7 +27,7 @@ namespace Sekougi.MessagePack
         Span<byte> GetPart(int start, int length);
         
         Span<byte> GetAll();
-        
-        int Length { get; }
+
+        long Seek(long offset, SeekOrigin seekOrigin);
     }
 }

@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using Sekougi.MessagePack.Exceptions;
+using Sekougi.MessagePack.Serializers;
 
 
 
-namespace Sekougi.MessagePack.Serializers
+namespace Sekougi.MessagePack
 {
     public static class MessagePackSerializersRepository
     {
@@ -123,7 +125,15 @@ namespace Sekougi.MessagePack.Serializers
 
         private static object CreateReflectionSerializer(Type serializingType)
         {
-            throw new NotImplementedException();
+            var serializationAttributes = serializingType.GetCustomAttributes(typeof(MessagePackSerializedAttribute), false);
+            
+            if (serializationAttributes == null || serializationAttributes.Length == 0) 
+                throw new MessagePackUnsupportedSerializationType($"MessagePackSerializedAttribute is missing for {serializingType}");
+            
+            var serializationAttribute = (MessagePackSerializedAttribute) serializationAttributes[0];
+            var serializer = Activator.CreateInstance(serializationAttribute.SerializedType);
+
+            return serializer;
         }
     }
 }
