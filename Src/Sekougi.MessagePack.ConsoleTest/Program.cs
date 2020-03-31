@@ -1,10 +1,4 @@
-﻿using System;
-using Sekougi.MessagePack.Serializers;
-
-
-
-
-namespace Sekougi.MessagePack.ConsoleTest
+namespace Sekougi.MessagePack.Tests
 {
     class Program
     {
