@@ -1,4 +1,4 @@
-﻿namespace Sekougi.MessagePack.ConsoleTest
+namespace Sekougi.MessagePack.Tests
 {
     class Program
     {
