@@ -3,17 +3,17 @@ using System.IO;
 
 
 
-namespace Sekougi.MessagePack
+namespace Sekougi.MessagePack.Buffers
 {
     // TODO: make normal buffer
-    public class MessagePackStreamBuffer : MemoryStream, IMessagePackBuffer
+    public class MessagePackMemoryStreamBuffer : MemoryStream, IMessagePackBuffer
     {
         public new int Length => (int) base.Length;
         
         
-        public MessagePackStreamBuffer(int capacity) : base(capacity) {}
+        public MessagePackMemoryStreamBuffer(int capacity) : base(capacity) {}
         
-        public MessagePackStreamBuffer() {}
+        public MessagePackMemoryStreamBuffer() {}
         
         public void Write(byte[] values) => Write(values, 0, values.Length);
         

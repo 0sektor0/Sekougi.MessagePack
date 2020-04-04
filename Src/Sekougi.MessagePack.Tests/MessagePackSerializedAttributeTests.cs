@@ -1,3 +1,4 @@
+using Sekougi.MessagePack.Buffers;
 using Sekougi.MessagePack.Serializers;
 using Xunit;
 
@@ -39,7 +40,7 @@ namespace Sekougi.MessagePack.Tests
         [Fact]
         public void TestCustomSerialization()
         {
-            using var buffer = new MessagePackStreamBuffer();
+            using var buffer = new MessagePackMemoryStreamBuffer();();
             var writer = new MessagePackWriter(buffer);
             
             var value = new TestSerializable(0x1);

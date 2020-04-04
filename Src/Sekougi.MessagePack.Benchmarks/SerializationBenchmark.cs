@@ -1,9 +1,8 @@
-using Sekougi.MessagePack.Serializers;
 using BenchmarkDotNet.Attributes;
 using MsgPack.Serialization;
 using System.IO;
 using MsgPack;
-
+using Sekougi.MessagePack.Buffers;
 
 
 namespace Sekougi.MessagePack.Benchmarks
@@ -17,10 +16,10 @@ namespace Sekougi.MessagePack.Benchmarks
         
         private Stream _cliStream;
         private Packer _packerCli;
-        private MsgPack.Serialization.MessagePackSerializer<int> _serializerIntCli;
-        private MsgPack.Serialization.MessagePackSerializer<double> _serializerDoubleCli;
-        private MsgPack.Serialization.MessagePackSerializer<float> _serializerFloatCli;
-        private MsgPack.Serialization.MessagePackSerializer<string> _serializerStringCli;
+        private MessagePackSerializer<int> _serializerIntCli;
+        private MessagePackSerializer<double> _serializerDoubleCli;
+        private MessagePackSerializer<float> _serializerFloatCli;
+        private MessagePackSerializer<string> _serializerStringCli;
 
         private IMessagePackBuffer _sekougiBuffer;
         private MessagePackWriter _writerSekougi;
@@ -56,7 +55,7 @@ namespace Sekougi.MessagePack.Benchmarks
             _cliStream = new MemoryStream(BUFFER_CAPACITY);
             _packerCli = Packer.Create(_cliStream);            
 
-            _sekougiBuffer = new MessagePackStreamBuffer(BUFFER_CAPACITY);
+            _sekougiBuffer = new MessagePackMemoryStreamBuffer(BUFFER_CAPACITY);
             _writerSekougi = new MessagePackWriter(_sekougiBuffer);
         }
 
