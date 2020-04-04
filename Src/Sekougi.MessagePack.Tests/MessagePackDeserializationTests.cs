@@ -122,7 +122,7 @@ namespace Sekougi.MessagePack.Tests
             var dateTimeZero = new DateTime(1970,1,1);
             var dateTime = new DateTime(2020, 1, 1, 1, 1, 1, 1);
             
-            using var buffer = new MessagePackMemoryStreamBuffer();();
+            using var buffer = new MessagePackMemoryStreamBuffer();
             var serializer = MessagePackSerializersRepository.Get<DateTime>();
             
             serializer.Serialize(dateTimeZero, buffer);

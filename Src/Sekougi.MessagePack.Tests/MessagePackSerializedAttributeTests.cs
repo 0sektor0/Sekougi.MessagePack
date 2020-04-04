@@ -40,7 +40,7 @@ namespace Sekougi.MessagePack.Tests
         [Fact]
         public void TestCustomSerialization()
         {
-            using var buffer = new MessagePackMemoryStreamBuffer();();
+            using var buffer = new MessagePackMemoryStreamBuffer();
             var writer = new MessagePackWriter(buffer);
             
             var value = new TestSerializable(0x1);
