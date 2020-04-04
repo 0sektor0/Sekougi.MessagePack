@@ -21,7 +21,7 @@ namespace Sekougi.MessagePack.Benchmarks
         private MessagePackSerializer<float> _serializerFloatCli;
         private MessagePackSerializer<string> _serializerStringCli;
 
-        private IMessagePackBuffer _sekougiBuffer;
+        private MessagePackBuffer _sekougiBuffer;
         private MessagePackWriter _writerSekougi;
         private Serializers.MessagePackSerializer<int> _serializerIntSekougi;
         private Serializers.MessagePackSerializer<double> _serializerDoubleSekougi;
