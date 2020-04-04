@@ -5,13 +5,12 @@ using System;
 
 namespace Sekougi.MessagePack.Buffers
 {
-    public class MessagePackStreamBuffer : IMessagePackBuffer
+    public class MessagePackStreamBuffer : IMessagePackBuffer, IDisposable
     {
         private Stream _stream;
 
         public int Length => (int) _stream.Length;
-        public bool CanSeek => _stream.CanSeek;
-
+        
         
         public MessagePackStreamBuffer(Stream stream)
         {
@@ -53,31 +52,15 @@ namespace Sekougi.MessagePack.Buffers
             return (byte) _stream.ReadByte();
         }
         
-        public void Drop()
-        {
-            _stream.Position = 0;
-        }
-        
-        public Span<byte> GetPart(int start, int length)
-        {
-            var part = new byte[length];
-            var position = _stream.Position;
-            
-            _stream.Seek(start, SeekOrigin.Begin);
-            _stream.Read(part);
-            _stream.Seek(position, SeekOrigin.Begin);
-
-            return part;
-        }
-        
-        public Span<byte> GetAll()
-        {
-            return GetPart(0, Length);
-        }
-
         public long Seek(long offset, SeekOrigin seekOrigin)
         {
             return _stream.Seek(offset, seekOrigin);
+        }
+
+        public void Clear()
+        {
+            _stream.SetLength(0);
+            _stream.Position = 0;
         }
     }
 }

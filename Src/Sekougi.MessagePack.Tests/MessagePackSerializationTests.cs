@@ -11,7 +11,7 @@ namespace Sekougi.MessagePack.Tests
         [Fact]
         public void BoolTest()
         {
-            using var buffer = new MessagePackMemoryStreamBuffer(2);
+            using var buffer = new MessagePackBuffer(2);
             var serializer = MessagePackSerializersRepository.Get<bool>();
             serializer.Serialize(false, buffer);
             serializer.Serialize(true, buffer);
@@ -26,7 +26,7 @@ namespace Sekougi.MessagePack.Tests
         public void FixNumsTest()
         {
             var capacity = 39;
-            using var buffer = new MessagePackMemoryStreamBuffer(capacity);
+            using var buffer = new MessagePackBuffer(capacity);
 
             var byteSerializer = MessagePackSerializersRepository.Get<byte>();
             var sbyteSerializer = MessagePackSerializersRepository.Get<sbyte>();
@@ -130,7 +130,7 @@ namespace Sekougi.MessagePack.Tests
         public void SbyteBoundaryTest()
         {
             var capacity = 3;
-            using var buffer = new MessagePackMemoryStreamBuffer(capacity);
+            using var buffer = new MessagePackBuffer(capacity);
             var sbyteSerializer = MessagePackSerializersRepository.Get<sbyte>();
             
             sbyteSerializer.Serialize(sbyte.MinValue, buffer);
@@ -148,7 +148,7 @@ namespace Sekougi.MessagePack.Tests
         public void ByteBoundaryTest()
         {
             var capacity = 2;
-            using var buffer = new MessagePackMemoryStreamBuffer(capacity);
+            using var buffer = new MessagePackBuffer(capacity);
             var serializer = MessagePackSerializersRepository.Get<byte>();
             
             serializer.Serialize(byte.MaxValue, buffer);
@@ -163,7 +163,7 @@ namespace Sekougi.MessagePack.Tests
         public void ShortBoundaryTest()
         {
             var capacity = 6;
-            using var buffer = new MessagePackMemoryStreamBuffer(capacity);
+            using var buffer = new MessagePackBuffer(capacity);
             var serializer = MessagePackSerializersRepository.Get<short>();
             
             serializer.Serialize(short.MinValue, buffer);
@@ -186,7 +186,7 @@ namespace Sekougi.MessagePack.Tests
         public void UshortBoundaryTest()
         {
             var capacity = 3;
-            using var buffer = new MessagePackMemoryStreamBuffer(capacity);
+            using var buffer = new MessagePackBuffer(capacity);
             var serializer = MessagePackSerializersRepository.Get<ushort>();
             
             serializer.Serialize(ushort.MaxValue, buffer);
@@ -202,7 +202,7 @@ namespace Sekougi.MessagePack.Tests
         public void IntBoundaryTest()
         {
             var capacity = 10;
-            using var buffer = new MessagePackMemoryStreamBuffer(capacity);
+            using var buffer = new MessagePackBuffer(capacity);
             var serializer = MessagePackSerializersRepository.Get<int>();
             
             serializer.Serialize(int.MinValue, buffer);
@@ -228,7 +228,7 @@ namespace Sekougi.MessagePack.Tests
         public void UintBoundaryTest()
         {
             var capacity = 5;
-            using var buffer = new MessagePackMemoryStreamBuffer(capacity);
+            using var buffer = new MessagePackBuffer(capacity);
             var serializer = MessagePackSerializersRepository.Get<uint>();
             
             serializer.Serialize(uint.MaxValue, buffer);
@@ -246,7 +246,7 @@ namespace Sekougi.MessagePack.Tests
         public void LongBoundaryTest()
         {
             var capacity = 18;
-            using var buffer = new MessagePackMemoryStreamBuffer(capacity);
+            using var buffer = new MessagePackBuffer(capacity);
             var serializer = MessagePackSerializersRepository.Get<long>();
             
             serializer.Serialize(long.MaxValue, buffer);
@@ -280,7 +280,7 @@ namespace Sekougi.MessagePack.Tests
         public void UlongBoundaryTest()
         {
             var capacity = 9;
-            using var buffer = new MessagePackMemoryStreamBuffer(capacity);
+            using var buffer = new MessagePackBuffer(capacity);
             var serializer = MessagePackSerializersRepository.Get<ulong>();
             
             serializer.Serialize(ulong.MaxValue, buffer);
@@ -302,7 +302,7 @@ namespace Sekougi.MessagePack.Tests
         public void FloatBoundaryTest()
         {
             var capacity = 10;
-            using var buffer = new MessagePackMemoryStreamBuffer(capacity);
+            using var buffer = new MessagePackBuffer(capacity);
             var serializer = MessagePackSerializersRepository.Get<float>();
             
             serializer.Serialize(float.MaxValue, buffer);
@@ -328,7 +328,7 @@ namespace Sekougi.MessagePack.Tests
         public void DoubleBoundaryTest()
         {
             var capacity = 18;
-            using var buffer = new MessagePackMemoryStreamBuffer(capacity);
+            using var buffer = new MessagePackBuffer(capacity);
             var serializer = MessagePackSerializersRepository.Get<double>();
             
             serializer.Serialize(double.MinValue, buffer);
@@ -362,7 +362,7 @@ namespace Sekougi.MessagePack.Tests
         public void NullStringTest()
         {
             var capacity = 1;
-            using var buffer = new MessagePackMemoryStreamBuffer(capacity);
+            using var buffer = new MessagePackBuffer(capacity);
             var serializer = MessagePackSerializersRepository.Get<string>();
             
             serializer.Serialize(null, buffer);
@@ -376,7 +376,7 @@ namespace Sekougi.MessagePack.Tests
         public void SmallStringTest()
         {
             var capacity = 2;
-            using var buffer = new MessagePackMemoryStreamBuffer(capacity);
+            using var buffer = new MessagePackBuffer(capacity);
             var serializer = MessagePackSerializersRepository.Get<string>();
             
             serializer.Serialize("a", buffer);
@@ -391,7 +391,7 @@ namespace Sekougi.MessagePack.Tests
         public void TimeStamp32Test()
         {
             var capacity = 6;
-            using var buffer = new MessagePackMemoryStreamBuffer(6);
+            using var buffer = new MessagePackBuffer(6);
             var serializer = MessagePackSerializersRepository.Get<DateTime>();
             
             var date = new DateTime(1970,1,1);
@@ -411,7 +411,7 @@ namespace Sekougi.MessagePack.Tests
         public void TimeStamp64Test()
         {
             var capacity = 10;
-            using var buffer = new MessagePackMemoryStreamBuffer(6);
+            using var buffer = new MessagePackBuffer(6);
             var serializer = MessagePackSerializersRepository.Get<DateTime>();
             
             var date = new DateTime(1970,1,1, 0, 0, 0, 1);

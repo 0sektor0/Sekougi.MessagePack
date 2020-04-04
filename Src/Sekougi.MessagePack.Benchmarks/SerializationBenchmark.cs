@@ -55,7 +55,7 @@ namespace Sekougi.MessagePack.Benchmarks
             _cliStream = new MemoryStream(BUFFER_CAPACITY);
             _packerCli = Packer.Create(_cliStream);            
 
-            _sekougiBuffer = new MessagePackMemoryStreamBuffer(BUFFER_CAPACITY);
+            _sekougiBuffer = new MessagePackBuffer(BUFFER_CAPACITY);
             _writerSekougi = new MessagePackWriter(_sekougiBuffer);
         }
 

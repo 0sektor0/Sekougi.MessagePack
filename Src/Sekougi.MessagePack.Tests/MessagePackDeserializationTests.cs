@@ -11,7 +11,7 @@ namespace Sekougi.MessagePack.Tests
         [Fact]
         public void SignedNumbersTest()
         {
-            using var buffer = new MessagePackMemoryStreamBuffer();
+            using var buffer = new MessagePackBuffer();
 
             var intSerializer = MessagePackSerializersRepository.Get<int>();
             var sbyteSerializer = MessagePackSerializersRepository.Get<sbyte>();
@@ -29,7 +29,7 @@ namespace Sekougi.MessagePack.Tests
             longSerializer.Serialize(long.MinValue, buffer);
             longSerializer.Serialize(long.MaxValue, buffer);
 
-            buffer.Drop();
+            buffer.ResetPosition();
             Assert.Equal(-1, intSerializer.Deserialize(buffer));
             Assert.Equal(1, intSerializer.Deserialize(buffer));
             Assert.Equal(sbyte.MinValue, sbyteSerializer.Deserialize(buffer));
@@ -45,7 +45,7 @@ namespace Sekougi.MessagePack.Tests
         [Fact]
         public void UnsignedNumbersTest()
         {
-            using var buffer = new MessagePackMemoryStreamBuffer();
+            using var buffer = new MessagePackBuffer();
             
             var uintSerializer = MessagePackSerializersRepository.Get<uint>();
             var byteSerializer = MessagePackSerializersRepository.Get<byte>();
@@ -57,7 +57,7 @@ namespace Sekougi.MessagePack.Tests
             uintSerializer.Serialize(uint.MaxValue, buffer);
             ulongSerializer.Serialize(ulong.MaxValue, buffer);
 
-            buffer.Drop();
+            buffer.ResetPosition();
             Assert.Equal(byte.MaxValue, byteSerializer.Deserialize(buffer));
             Assert.Equal(ushort.MaxValue, ushortSerializer.Deserialize(buffer));
             Assert.Equal(uint.MaxValue, uintSerializer.Deserialize(buffer));
@@ -67,7 +67,7 @@ namespace Sekougi.MessagePack.Tests
         [Fact]
         public void FloatingPointNumbersTest()
         {
-            using var buffer = new MessagePackMemoryStreamBuffer();
+            using var buffer = new MessagePackBuffer();
             
             var floatSerializer = MessagePackSerializersRepository.Get<float>();
             var doubleSerializer = MessagePackSerializersRepository.Get<double>();
@@ -77,7 +77,7 @@ namespace Sekougi.MessagePack.Tests
             doubleSerializer.Serialize(double.MaxValue, buffer);
             doubleSerializer.Serialize(double.MinValue, buffer);
 
-            buffer.Drop();
+            buffer.ResetPosition();
             Assert.Equal(float.MaxValue, floatSerializer.Deserialize(buffer));
             Assert.Equal(float.MinValue, floatSerializer.Deserialize(buffer));
             Assert.Equal(double.MaxValue, doubleSerializer.Deserialize(buffer));
@@ -92,7 +92,7 @@ namespace Sekougi.MessagePack.Tests
             var str16 = new string(new char[ushort.MaxValue - 10]);
             var str32 = new string(new char[ushort.MaxValue + 10]);
             
-            using var buffer = new MessagePackMemoryStreamBuffer();
+            using var buffer = new MessagePackBuffer();
             var serializer = MessagePackSerializersRepository.Get<string>();
             
             serializer.Serialize(null, buffer);
@@ -102,7 +102,7 @@ namespace Sekougi.MessagePack.Tests
             serializer.Serialize(str16, buffer);
             serializer.Serialize(str32, buffer);
 
-            buffer.Drop();
+            buffer.ResetPosition();
             Assert.Equal(null,serializer.Deserialize(buffer));
             Assert.Equal("", serializer.Deserialize(buffer));
             
@@ -122,13 +122,13 @@ namespace Sekougi.MessagePack.Tests
             var dateTimeZero = new DateTime(1970,1,1);
             var dateTime = new DateTime(2020, 1, 1, 1, 1, 1, 1);
             
-            using var buffer = new MessagePackMemoryStreamBuffer();
+            using var buffer = new MessagePackBuffer();
             var serializer = MessagePackSerializersRepository.Get<DateTime>();
             
             serializer.Serialize(dateTimeZero, buffer);
             serializer.Serialize(dateTime, buffer);
 
-            buffer.Drop();
+            buffer.ResetPosition();
             Assert.Equal(dateTimeZero, serializer.Deserialize(buffer));
             Assert.Equal(dateTime, serializer.Deserialize(buffer));
         }
@@ -140,14 +140,14 @@ namespace Sekougi.MessagePack.Tests
             var binaryData16 = new byte[ushort.MaxValue - 1];
             var binaryData32= new byte[ushort.MaxValue + 1];
             
-            using var buffer = new MessagePackMemoryStreamBuffer();
+            using var buffer = new MessagePackBuffer();
             var serializer = MessagePackSerializersRepository.Get<byte[]>();
             
             serializer.Serialize(binaryData8, buffer);
             serializer.Serialize(binaryData16, buffer);
             serializer.Serialize(binaryData32, buffer);
 
-            buffer.Drop();
+            buffer.ResetPosition();
             Assert.Equal(binaryData8, serializer.Deserialize(buffer));
             Assert.Equal(binaryData16, serializer.Deserialize(buffer));
             Assert.Equal(binaryData32, serializer.Deserialize(buffer));
@@ -161,7 +161,7 @@ namespace Sekougi.MessagePack.Tests
             var array16 = new string[ushort.MaxValue - 1];
             var array32 = new string[ushort.MaxValue + 1];
             
-            using var buffer = new MessagePackMemoryStreamBuffer();
+            using var buffer = new MessagePackBuffer();
             var serializer = MessagePackSerializersRepository.Get<string[]>();
             
             serializer.Serialize(arrayEmpty, buffer);
@@ -169,7 +169,7 @@ namespace Sekougi.MessagePack.Tests
             serializer.Serialize(array16, buffer);
             serializer.Serialize(array32, buffer);
 
-            buffer.Drop();
+            buffer.ResetPosition();
             Assert.Equal(arrayEmpty, serializer.Deserialize(buffer));
             Assert.Equal(array1, serializer.Deserialize(buffer));
             Assert.Equal(array16, serializer.Deserialize(buffer));

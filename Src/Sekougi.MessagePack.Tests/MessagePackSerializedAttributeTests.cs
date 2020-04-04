@@ -40,14 +40,14 @@ namespace Sekougi.MessagePack.Tests
         [Fact]
         public void TestCustomSerialization()
         {
-            using var buffer = new MessagePackMemoryStreamBuffer();
+            using var buffer = new MessagePackBuffer();
             var writer = new MessagePackWriter(buffer);
             
             var value = new TestSerializable(0x1);
             var serializer = MessagePackSerializersRepository.Get<TestSerializable>();
             serializer.Serialize(value, writer);
             
-            buffer.Drop();
+            buffer.ResetPosition();
 
             var reader = new MessagePackReader(buffer);
             var deserializedValue = serializer.Deserialize(reader);
