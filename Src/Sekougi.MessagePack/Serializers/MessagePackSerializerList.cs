@@ -17,7 +17,7 @@ namespace Sekougi.MessagePack.Serializers
         
         public override void Serialize(List<T> values, MessagePackWriter writer)
         {
-            writer.WriteArrayHeader(values.Count);
+            writer.WriteArrayLength(values.Count);
             foreach (var value in values)
             {
                 _elementSerializer.Serialize(value, writer);

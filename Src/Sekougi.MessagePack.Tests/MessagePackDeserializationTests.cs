@@ -175,5 +175,47 @@ namespace Sekougi.MessagePack.Tests
             Assert.Equal(array16, serializer.Deserialize(buffer));
             Assert.Equal(array32, serializer.Deserialize(buffer));
         }
+
+        [Fact]
+        public void ValueTuple1Test()
+        {
+            using var buffer = new MessagePackBuffer();
+            var serializer1 = MessagePackSerializersRepository.Get<ValueTuple<int>>();
+            var serializer2 = MessagePackSerializersRepository.Get<ValueTuple<int, byte>>();
+            var serializer3 = MessagePackSerializersRepository.Get<ValueTuple<int, byte, sbyte>>();
+            var serializer4 = MessagePackSerializersRepository.Get<ValueTuple<int, byte, sbyte, double>>();
+            var serializer5 = MessagePackSerializersRepository.Get<ValueTuple<int, byte, sbyte, uint, short>>();
+            var serializer6 = MessagePackSerializersRepository.Get<ValueTuple<int, byte, sbyte, uint, short, float>>();
+            var serializer7 = MessagePackSerializersRepository.Get<ValueTuple<int, byte, sbyte, uint, short, float, double>>();
+            var serializer8 = MessagePackSerializersRepository.Get<ValueTuple<string, int, int, int, int, int, int, ValueTuple<int>>>();
+            
+            var tuple1 = new ValueTuple<int>(1);
+            var tuple2 = (1, (byte)1);
+            var tuple3 = (1, (byte)1, (sbyte)1);
+            var tuple4 = (1, (byte)1, (sbyte)1, 1d);
+            var tuple5 = (1, (byte)1, (sbyte)1, (uint)1, (short)1);
+            var tuple6 = (1, (byte)1, (sbyte)1, (uint)1, (short)1, 1f);
+            var tuple7 = (1, (byte)1, (sbyte)1, (uint)1, (short)1, 1f, 1d);
+            var tuple8 = new ValueTuple<string, int, int, int, int, int, int, ValueTuple<int>>("test", 1, 1, 1, 1, 1, 1, tuple1);
+            
+            serializer1.Serialize(tuple1, buffer);
+            serializer2.Serialize(tuple2, buffer);
+            serializer3.Serialize(tuple3, buffer);
+            serializer4.Serialize(tuple4, buffer);
+            serializer5.Serialize(tuple5, buffer);
+            serializer6.Serialize(tuple6, buffer);
+            serializer7.Serialize(tuple7, buffer);
+            serializer8.Serialize(tuple8, buffer);
+            
+            buffer.ResetPosition();
+            Assert.Equal(tuple1, serializer1.Deserialize(buffer));
+            Assert.Equal(tuple2, serializer2.Deserialize(buffer));
+            Assert.Equal(tuple3, serializer3.Deserialize(buffer));
+            Assert.Equal(tuple4, serializer4.Deserialize(buffer));
+            Assert.Equal(tuple5, serializer5.Deserialize(buffer));
+            Assert.Equal(tuple6, serializer6.Deserialize(buffer));
+            Assert.Equal(tuple7, serializer7.Deserialize(buffer));
+            Assert.Equal(tuple8, serializer8.Deserialize(buffer));
+        }
     }
 }

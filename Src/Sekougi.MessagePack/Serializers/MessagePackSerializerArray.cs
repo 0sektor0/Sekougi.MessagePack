@@ -12,7 +12,7 @@ namespace Sekougi.MessagePack.Serializers
 
         public override void Serialize(T[] values, MessagePackWriter writer)
         {
-            writer.WriteArrayHeader(values.Length);
+            writer.WriteArrayLength(values.Length);
             foreach (var value in values)
             {
                 _elementSerializer.Serialize(value, writer);

@@ -37,15 +37,15 @@ namespace Sekougi.MessagePack
                 WriteBinaryData32(MessagePackTypeCode.BIN32, bytes);
         }
 
-        public void WriteArrayHeader(int length)
+        public void WriteArrayLength(int length)
         {
-            WriteCollectionHeader(length, MessagePackTypeCode.FIX_ARRAY, 
+            WriteCollectionLength(length, MessagePackTypeCode.FIX_ARRAY, 
                 MessagePackTypeCode.ARRAY16, MessagePackTypeCode.ARRAY32);
         }
 
-        public void WriteDictionaryHeader(int length)
+        public void WriteDictionaryLength(int length)
         {
-            WriteCollectionHeader(length, MessagePackTypeCode.FIX_MAP, 
+            WriteCollectionLength(length, MessagePackTypeCode.FIX_MAP, 
                 MessagePackTypeCode.MAP16, MessagePackTypeCode.MAP32);
         }
         
@@ -229,7 +229,7 @@ namespace Sekougi.MessagePack
             _messagePackBuffer.Write(MessagePackTypeCode.NIL);
         }
 
-        private void WriteCollectionHeader(int length, byte prefix, byte code16, byte code32)
+        private void WriteCollectionLength(int length, byte prefix, byte code16, byte code32)
         {
             if (length < 0)
             {
