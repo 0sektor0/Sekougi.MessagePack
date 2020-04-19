@@ -35,6 +35,16 @@ namespace Sekougi.MessagePack.Serializers
             _item5Serializer.Serialize(value.Item5, writer);
         }
 
+        public override void SerializeUncompressed(ValueTuple<T1, T2, T3, T4, T5> value, MessagePackWriter writer)
+        {
+            writer.WriteArrayLength(TUPLE_LENGTH);
+            _item1Serializer.SerializeUncompressed(value.Item1, writer);
+            _item2Serializer.SerializeUncompressed(value.Item2, writer);
+            _item3Serializer.SerializeUncompressed(value.Item3, writer);
+            _item4Serializer.SerializeUncompressed(value.Item4, writer);
+            _item5Serializer.SerializeUncompressed(value.Item5, writer);
+        }
+
         public override ValueTuple<T1, T2, T3, T4, T5> Deserialize(MessagePackReader reader)
         {
             var length = reader.ReadArrayLength();

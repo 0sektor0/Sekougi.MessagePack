@@ -25,6 +25,16 @@ namespace Sekougi.MessagePack.Serializers
                 _valueSerializer.Serialize(value, writer);
             }
         }
+        
+        public override void SerializeUncompressed(Dictionary<TKey, TValue> dictionary, MessagePackWriter writer)
+        {
+            writer.WriteDictionaryLength(dictionary.Count);
+            foreach (var (key, value) in dictionary)
+            {
+                _keySerializer.SerializeUncompressed(key, writer);
+                _valueSerializer.SerializeUncompressed(value, writer);
+            }
+        }
 
         public override Dictionary<TKey, TValue> Deserialize(MessagePackReader reader)
         {

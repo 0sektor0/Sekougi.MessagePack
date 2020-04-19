@@ -23,6 +23,15 @@ namespace Sekougi.MessagePack.Serializers
                 _elementSerializer.Serialize(value, writer);
             }
         }
+        
+        public override void SerializeUncompressed(List<T> values, MessagePackWriter writer)
+        {
+            writer.WriteArrayLength(values.Count);
+            foreach (var value in values)
+            {
+                _elementSerializer.SerializeUncompressed(value, writer);
+            }
+        }
 
         public override List<T> Deserialize(MessagePackReader reader)
         {

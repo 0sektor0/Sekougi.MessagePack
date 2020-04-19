@@ -22,6 +22,12 @@ namespace Sekougi.MessagePack.Serializers
             _itemSerializer.Serialize(value.Item1, writer);
         }
 
+        public override void SerializeUncompressed(ValueTuple<T> value, MessagePackWriter writer)
+        {
+            writer.WriteArrayLength(TUPLE_LENGTH);
+            _itemSerializer.SerializeUncompressed(value.Item1, writer);
+        }
+
         public override ValueTuple<T> Deserialize(MessagePackReader reader)
         {
             var length = reader.ReadArrayLength();
