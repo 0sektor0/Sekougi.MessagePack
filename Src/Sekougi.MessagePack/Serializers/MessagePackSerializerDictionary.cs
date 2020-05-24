@@ -18,11 +18,21 @@ namespace Sekougi.MessagePack.Serializers
         
         public override void Serialize(Dictionary<TKey, TValue> dictionary, MessagePackWriter writer)
         {
-            writer.WriteDictionaryHeader(dictionary.Count);
+            writer.WriteDictionaryLength(dictionary.Count);
             foreach (var (key, value) in dictionary)
             {
                 _keySerializer.Serialize(key, writer);
                 _valueSerializer.Serialize(value, writer);
+            }
+        }
+        
+        public override void SerializeUncompressed(Dictionary<TKey, TValue> dictionary, MessagePackWriter writer)
+        {
+            writer.WriteDictionaryLength(dictionary.Count);
+            foreach (var (key, value) in dictionary)
+            {
+                _keySerializer.SerializeUncompressed(key, writer);
+                _valueSerializer.SerializeUncompressed(value, writer);
             }
         }
 

@@ -37,15 +37,15 @@ namespace Sekougi.MessagePack
                 WriteBinaryData32(MessagePackTypeCode.BIN32, bytes);
         }
 
-        public void WriteArrayHeader(int length)
+        public void WriteArrayLength(int length)
         {
-            WriteCollectionHeader(length, MessagePackTypeCode.FIX_ARRAY, 
+            WriteCollectionLength(length, MessagePackTypeCode.FIX_ARRAY, 
                 MessagePackTypeCode.ARRAY16, MessagePackTypeCode.ARRAY32);
         }
 
-        public void WriteDictionaryHeader(int length)
+        public void WriteDictionaryLength(int length)
         {
-            WriteCollectionHeader(length, MessagePackTypeCode.FIX_MAP, 
+            WriteCollectionLength(length, MessagePackTypeCode.FIX_MAP, 
                 MessagePackTypeCode.MAP16, MessagePackTypeCode.MAP32);
         }
         
@@ -84,9 +84,9 @@ namespace Sekougi.MessagePack
             _messagePackBuffer.Write(byteValue);
         }
         
-        public void Write(short value)
+        public void Write(short value, bool canUseCompression = true)
         {
-            var canUseSbyte = value <= sbyte.MaxValue && value >= sbyte.MinValue;
+            var canUseSbyte = canUseCompression && value <= sbyte.MaxValue && value >= sbyte.MinValue;
             if (canUseSbyte)
             {
                 Write((sbyte)value);
@@ -97,9 +97,9 @@ namespace Sekougi.MessagePack
             WriteBigEndian(value);
         }
         
-        public void Write(ushort value)
+        public void Write(ushort value, bool canUseCompression = true)
         {
-            var canUseByte = value <= byte.MaxValue;
+            var canUseByte = canUseCompression && value <= byte.MaxValue;
             if (canUseByte)
             {
                 Write((byte)value);
@@ -110,9 +110,9 @@ namespace Sekougi.MessagePack
             WriteBigEndian(value);
         }
 
-        public void Write(uint value)
+        public void Write(uint value, bool canUseCompression = true)
         {
-            var canUseUshort = value <= ushort.MaxValue;
+            var canUseUshort = canUseCompression && value <= ushort.MaxValue;
             if (canUseUshort)
             {
                 Write((ushort)value);
@@ -123,9 +123,9 @@ namespace Sekougi.MessagePack
             WriteBigEndian(value);
         }
 
-        public void Write(ulong value)
+        public void Write(ulong value, bool canUseCompression = true)
         {
-            var canUseUint = value <= uint.MaxValue;
+            var canUseUint = canUseCompression && value <= uint.MaxValue;
             if (canUseUint)
             {
                 Write((uint)value);
@@ -136,9 +136,9 @@ namespace Sekougi.MessagePack
             WriteBigEndian(value);
         }
         
-        public void Write(int value)
+        public void Write(int value, bool canUseCompression = true)
         {
-            var canUseShort = value <= short.MaxValue && value >= short.MinValue;
+            var canUseShort = canUseCompression && value <= short.MaxValue && value >= short.MinValue;
             if (canUseShort)
             {
                 Write((short)value);
@@ -149,9 +149,9 @@ namespace Sekougi.MessagePack
             WriteBigEndian(value);
         }
         
-        public void Write(long value)
+        public void Write(long value, bool canUseCompression = true)
         {
-            var canUseInt = value <= int.MaxValue && value >= int.MinValue;
+            var canUseInt = canUseCompression && value <= int.MaxValue && value >= int.MinValue;
             if (canUseInt)
             {
                 Write((int)value);
@@ -229,7 +229,7 @@ namespace Sekougi.MessagePack
             _messagePackBuffer.Write(MessagePackTypeCode.NIL);
         }
 
-        private void WriteCollectionHeader(int length, byte prefix, byte code16, byte code32)
+        private void WriteCollectionLength(int length, byte prefix, byte code16, byte code32)
         {
             if (length < 0)
             {

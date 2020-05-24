@@ -7,6 +7,11 @@ namespace Sekougi.MessagePack.Serializers
             writer.Write(value);
         }
 
+        public override void SerializeUncompressed(short value, MessagePackWriter writer)
+        {
+            writer.Write(value, false);
+        }
+
         public override short Deserialize(MessagePackReader reader)
         {
             return reader.ReadShort();

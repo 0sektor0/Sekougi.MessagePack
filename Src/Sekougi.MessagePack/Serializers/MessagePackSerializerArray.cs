@@ -12,10 +12,25 @@ namespace Sekougi.MessagePack.Serializers
 
         public override void Serialize(T[] values, MessagePackWriter writer)
         {
-            writer.WriteArrayHeader(values.Length);
-            foreach (var value in values)
+            writer.WriteArrayLength(values.Length);
+            var length = values.Length;
+
+            for (var i = 0; i < length; i++)
             {
+                var value = values[i];
                 _elementSerializer.Serialize(value, writer);
+            }
+        }
+        
+        public override void SerializeUncompressed(T[] values, MessagePackWriter writer)
+        {
+            writer.WriteArrayLength(values.Length);
+            var length = values.Length;
+
+            for (var i = 0; i < length; i++)
+            {
+                var value = values[i];
+                _elementSerializer.SerializeUncompressed(value, writer);
             }
         }
 

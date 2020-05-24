@@ -1,7 +1,8 @@
-using System;
-using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using Sekougi.MessagePack.Exceptions;
 using Sekougi.MessagePack.Serializers;
+using System.Collections.Generic;
+using System;
 
 
 
@@ -78,6 +79,11 @@ namespace Sekougi.MessagePack
                 return CreateArraySerializer(serializingType);
             }
 
+            if (IsValueTuple(serializingType))
+            {
+                return CreateValueTupleSerializer(serializingType);
+            }
+
             return CreateReflectionSerializer(serializingType);
         }
 
@@ -91,6 +97,11 @@ namespace Sekougi.MessagePack
             return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(List<>);
         }
 
+        private static bool IsValueTuple(Type type)
+        {
+            return type.IsValueType && typeof(ITuple).IsAssignableFrom(type);
+        }
+        
         private static object CreateDictionarySerializer(Type serializingType)
         {
             var keyType = serializingType.GetGenericArguments()[0];
@@ -120,6 +131,57 @@ namespace Sekougi.MessagePack
             var factoryType = typeof(ReflectionSerializerFactoryArray<>).MakeGenericType(elementType);
             var factory = (IReflectionSerializationFactory) Activator.CreateInstance(factoryType, Array.Empty<object>());
             
+            return factory.Create();
+        }
+
+        private static object CreateValueTupleSerializer(Type serializingType)
+        {
+            var genericArguments = serializingType.GetGenericArguments();
+            if (genericArguments == null)
+                throw new MessagePackUnsupportedSerializationType("type has no generic arguments");
+            
+            var length = genericArguments.Length;
+            Type factoryType;
+            
+            switch (length)
+            {
+                case 1:
+                    factoryType = typeof(ReflectionSerializerFactoryValueTuple1<>).MakeGenericType(genericArguments);
+                    break;
+                
+                case 2:
+                    factoryType = typeof(ReflectionSerializerFactoryValueTuple2<,>).MakeGenericType(genericArguments);
+                    break;
+                
+                case 3:
+                    factoryType = typeof(ReflectionSerializerFactoryValueTuple3<,,>).MakeGenericType(genericArguments);
+                    break;
+                
+                case 4:
+                    factoryType = typeof(ReflectionSerializerFactoryValueTuple4<,,,>).MakeGenericType(genericArguments);
+                    break;
+                
+                case 5:
+                    factoryType = typeof(ReflectionSerializerFactoryValueTuple5<,,,,>).MakeGenericType(genericArguments);
+                    break;
+                
+                case 6:
+                    factoryType = typeof(ReflectionSerializerFactoryValueTuple6<,,,,,>).MakeGenericType(genericArguments);
+                    break;
+                
+                case 7:
+                    factoryType = typeof(ReflectionSerializerFactoryValueTuple7<,,,,,,>).MakeGenericType(genericArguments);
+                    break;
+                
+                case 8:
+                    factoryType = typeof(ReflectionSerializerFactoryValueTuple8<,,,,,,,>).MakeGenericType(genericArguments);
+                    break;
+                
+                default:
+                    throw new MessagePackUnsupportedSerializationType("invalid tuple length");
+            }
+            
+            var factory = (IReflectionSerializationFactory) Activator.CreateInstance(factoryType, Array.Empty<object>());
             return factory.Create();
         }
 

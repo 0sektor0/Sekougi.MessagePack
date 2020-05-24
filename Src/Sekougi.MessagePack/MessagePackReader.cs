@@ -22,6 +22,14 @@ namespace Sekougi.MessagePack
         {
             _messagePackBuffer = messagePackBuffer;
         }
+
+        public byte[] ReadRawBytes(int length)
+        {
+            var bytes = new byte[length];
+            _messagePackBuffer.Read(bytes, 0, length);
+
+            return bytes;
+        }
         
         public bool ReadBool()
         {

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using MsgPack;
 using MsgPack.Serialization;
-using Sekougi.MessagePack.Serializers;
+using Sekougi.MessagePack.Buffers;
 using Xunit;
 
 
@@ -145,7 +145,7 @@ namespace Sekougi.MessagePack.Tests
 
         private void TestCompatibility<T>(T[] values)
         {
-            using var buffer = new MessagePackStreamBuffer();
+            using var buffer = new MessagePackBuffer();
             using var packer = Packer.Create(buffer);
             
             var cliSerializer = MessagePackSerializer.Get<T>();
@@ -156,7 +156,7 @@ namespace Sekougi.MessagePack.Tests
                 cliSerializer.PackTo(packer, value);
             }
 
-            buffer.Drop();
+            buffer.ResetPosition();
             foreach (var value in values)
             {
                 var deserializedValue = sekougiSerializer.Deserialize(buffer);

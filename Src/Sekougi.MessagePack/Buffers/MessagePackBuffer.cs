@@ -3,17 +3,17 @@ using System.IO;
 
 
 
-namespace Sekougi.MessagePack
+namespace Sekougi.MessagePack.Buffers
 {
     // TODO: make normal buffer
-    public class MessagePackStreamBuffer : MemoryStream, IMessagePackBuffer
+    public class MessagePackBuffer : MemoryStream, IMessagePackBuffer
     {
         public new int Length => (int) base.Length;
         
         
-        public MessagePackStreamBuffer(int capacity) : base(capacity) {}
+        public MessagePackBuffer(int capacity) : base(capacity) {}
         
-        public MessagePackStreamBuffer() {}
+        public MessagePackBuffer() {}
         
         public void Write(byte[] values) => Write(values, 0, values.Length);
         
@@ -21,7 +21,7 @@ namespace Sekougi.MessagePack
         
         public byte Read() => (byte) base.ReadByte();
         
-        public void Drop() => Position = 0;
+        public void ResetPosition() => Position = 0;
 
         public Span<byte> GetPart(int start, int length)
         {
@@ -36,6 +36,12 @@ namespace Sekougi.MessagePack
             var buffer = GetBuffer();
             var span = new Span<byte>(buffer, 0, Length);
             return span;
+        }
+
+        public void Clear()
+        {
+            Position = 0;
+            SetLength(0);
         }
     }
 }
